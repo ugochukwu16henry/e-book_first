@@ -40,8 +40,16 @@ function DownloadPdfButton({ book, className = '' }) {
     return null;
   }
 
+  const fileName = book.pdfFileName || `${book.slug || 'ebook'}.pdf`;
+  const downloadKey = `${book.slug || 'ebook'}-${book.templateKey || 'template'}-${fileName}`;
+
   return (
-    <PDFDownloadLink document={<MyEbook data={book} />} fileName={book.pdfFileName} className="inline-flex">
+    <PDFDownloadLink
+      key={downloadKey}
+      document={<MyEbook key={downloadKey} data={book} />}
+      fileName={fileName}
+      className="inline-flex"
+    >
       {({ loading }) => (
         <span
           className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold shadow-lg transition ${className}`}

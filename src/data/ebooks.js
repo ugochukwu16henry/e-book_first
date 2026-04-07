@@ -3,6 +3,12 @@ const resolveAsset = (path) =>
 
 const hydrateBook = (book) => ({
   ...book,
+  author: book.author || 'Henry Ugochukwu',
+  focusTitle: book.focusTitle || book.badge || book.title || 'Featured Guide',
+  focus:
+    book.focus ||
+    book.description ||
+    'Premarital preparation, communication, and commitment.',
   coverImage: resolveAsset(book.coverImagePath),
 });
 

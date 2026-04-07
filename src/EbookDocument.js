@@ -54,6 +54,11 @@ const themes = {
   },
 };
 
+const getAuthor = (data = {}) => toPlainText(data.author || 'Henry Ugochukwu');
+const getFocusTitle = (data = {}, theme) => toPlainText(data.focusTitle || data.badge || theme.label || 'Featured Guide');
+const getFocusText = (data = {}) =>
+  toPlainText(data.focus || data.description || 'Premarital preparation, communication, and commitment');
+
 const styles = StyleSheet.create({
   page: {
     paddingTop: 42,
@@ -200,16 +205,21 @@ const styles = StyleSheet.create({
 export const MyEbook = ({ data }) => {
   const chapters = data?.chapters ?? [];
   const theme = themes[data?.templateKey] ?? themes.premium;
+  const author = getAuthor(data);
+  const focusTitle = getFocusTitle(data, theme);
+  const focusText = getFocusText(data);
 
   return (
     <Document
       title={data?.title || 'The Premarital Readiness Blueprint'}
-      author="Henry Ugochukwu"
-      subject="Premarital preparation and relationship readiness"
-      keywords="premarital, marriage, relationships, communication, readiness"
+      author={author}
+      subject={focusText}
+      keywords={[data?.title, focusTitle, data?.templateKey, 'ebook', 'marriage']
+        .filter(Boolean)
+        .join(', ')}
     >
       <Page size="A4" style={[styles.coverPage, { backgroundColor: theme.coverBg, color: theme.text }]}> 
-        <Text style={[styles.label, { color: theme.accent }]}>{theme.label}</Text>
+        <Text style={[styles.label, { color: theme.accent }]}>{focusTitle}</Text>
         <Text style={[styles.title, { color: theme.accent }]}>{data?.title || 'The Premarital Readiness Blueprint'}</Text>
         <Text style={[styles.subtitle, { color: theme.subtext }]}>
           {toPlainText(data?.description || data?.subtitle || 'A practical guide for couples preparing for a strong, faith-centered future.')}
@@ -230,8 +240,8 @@ export const MyEbook = ({ data }) => {
             </Text>
 
             <View style={[styles.infoCard, { backgroundColor: theme.cardBg, borderColor: theme.line }]}>
-              <Text style={[styles.infoLine, { color: theme.text }]}>Author: Henry Ugochukwu</Text>
-              <Text style={[styles.infoLine, { color: theme.text }]}>Focus: Premarital preparation, communication, and commitment</Text>
+              <Text style={[styles.infoLine, { color: theme.text }]}>Author: {author}</Text>
+              <Text style={[styles.infoLine, { color: theme.text }]}>Focus: {focusText}</Text>
               <Text style={[styles.infoLine, { color: theme.text }]}>Chapters: {chapters.length}</Text>
               <Text style={[styles.infoLine, { color: theme.text }]}>PDF Template: {theme.label}</Text>
             </View>
