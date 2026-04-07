@@ -8,7 +8,7 @@
     "coverImagePath": "/images/e-book-cover.svg",
     "pdfFileName": "new-ebook-770c52.pdf",
     "selarUrl": "https://selar.co/your-product-link",
-    "templateKey": "relaxed-book",
+    "templateKey": "relaxed-letter",
     "description": "Add a short sales description for this eBook.",
     "intro": "\u003Cp\u003EAdd the intro content that should appear on the product page and in the PDF.\u003C/p\u003E",
     "closingNote": "\u003Cp\u003EAdd a strong closing note for readers.\u003C/p\u003E",

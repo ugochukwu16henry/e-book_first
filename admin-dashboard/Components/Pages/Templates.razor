@@ -19,6 +19,12 @@ else
             <div class="col-md-6 col-xl-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-body">
+                        <div class="template-preview-art @GetTemplatePreviewClass(template.Key) mb-3">
+                            <span class="template-preview-chip">@template.Key</span>
+                            <span class="template-preview-line long"></span>
+                            <span class="template-preview-line"></span>
+                            <span class="template-preview-line short"></span>
+                        </div>
                         <span class="badge text-bg-light mb-3">@template.Key</span>
                         <h2 class="h5">@template.Name</h2>
                         <p class="text-muted mb-0">@template.Description</p>
@@ -36,4 +42,17 @@ else
     {
         _templates = await Repository.GetTemplatesAsync();
     }
+
+    private static string GetTemplatePreviewClass(string? key) => key?.ToLowerInvariant() switch
+    {
+        "premium" => "template-premium",
+        "classic" => "template-classic",
+        "minimal" => "template-minimal",
+        "relaxed" => "template-relaxed",
+        "relaxed-book" => "template-relaxed-book",
+        "relaxed-report" => "template-relaxed-report",
+        "relaxed-paper" => "template-relaxed-paper",
+        "relaxed-letter" => "template-relaxed-letter",
+        _ => "template-premium"
+    };
 }
