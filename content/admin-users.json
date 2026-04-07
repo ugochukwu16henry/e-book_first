@@ -12,17 +12,6 @@
       "disabled": false,
       "passwordHash": "AQAAAAIAAYagAAAAEDd\u002B12bQQc87uB6tok2lIZqoOuut593CjO3z0W8cc4GK8y/9CNoOGWMzVubsEgQryA==",
       "updatedUtc": "2026-04-07T11:01:58.2475362+00:00"
-    },
-    {
-      "id": "68ea2deec19b4d1785973b0030775e2a",
-      "email": "editor.placeholder@example.com",
-      "displayName": "Content Editor",
-      "roles": [
-        "Editor"
-      ],
-      "disabled": true,
-      "passwordHash": "AQAAAAIAAYagAAAAEGilWZCs2fh4VanGLsb2M3SeUrz03Dr9OBE0kNLAnAV/prGp29j4zPBlvO0f84NLDQ==",
-      "updatedUtc": "2026-04-07T11:01:58.3282338+00:00"
     }
   ]
 }
