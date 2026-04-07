@@ -24,7 +24,6 @@ C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\scopedcss
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\scopedcss\Components\Layout\ReconnectModal.razor.rz.scp.css
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\scopedcss\bundle\EbookAdmin.styles.css
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\scopedcss\projectbundle\EbookAdmin.bundle.scp.css
-C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\compressed\mxt9kldg3d-{0}-h5t2urmzww-h5t2urmzww.gz
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\compressed\84cjqh5qty-{0}-bqjiyaj88i-bqjiyaj88i.gz
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\compressed\o41suq1cuv-{0}-c2jlpeoesf-c2jlpeoesf.gz
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\compressed\e7nxsw2epw-{0}-erw9l3u2r3-erw9l3u2r3.gz
