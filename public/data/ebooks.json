@@ -1,5 +1,30 @@
 [
   {
+    "slug": "new-ebook-a2fdb9",
+    "title": "New eBook Title",
+    "badge": "Draft",
+    "price": "$0",
+    "format": "Instant PDF download",
+    "coverImagePath": "/images/e-book-cover.svg",
+    "pdfFileName": "new-ebook-a2fdb9.pdf",
+    "selarUrl": "https://selar.co/your-product-link",
+    "templateKey": "premium",
+    "description": "Add a short sales description for this eBook.",
+    "intro": "\u003Cp\u003EAdd the intro content that should appear on the product page and in the PDF.\u003C/p\u003E",
+    "closingNote": "\u003Cp\u003EAdd a strong closing note for readers.\u003C/p\u003E",
+    "chapters": [
+      {
+        "title": "Chapter 1: New Lesson",
+        "summary": "Introduce the first lesson here.",
+        "content": "\u003Cp\u003EWrite the lesson content here.\u003C/p\u003E",
+        "prompts": [
+          "Add a reflection prompt"
+        ],
+        "takeaway": "Summarize the key lesson."
+      }
+    ]
+  },
+  {
     "slug": "premarital-readiness-blueprint",
     "title": "The Premarital Readiness Blueprint",
     "badge": "Featured",
@@ -7,7 +32,7 @@
     "format": "Instant PDF download",
     "coverImagePath": "/images/E-book%20cover.jfif",
     "pdfFileName": "the-premarital-readiness-blueprint.pdf",
-    "selarUrl": "https://selar.co/premarital-readiness-blueprint",
+    "selarUrl": "https://selar.com/7d35y4v77r",
     "templateKey": "premium",
     "description": "A practical, faith-aware guide for couples preparing for a strong and intentional future.",
     "intro": "This premium guide helps couples move beyond romantic excitement into thoughtful preparation. It brings together emotional insight, relationship wisdom, and practical conversation prompts so readers can prepare for marriage with greater clarity, trust, and maturity.",
@@ -60,7 +85,7 @@
       {
         "title": "Chapter 5: Commitment",
         "summary": "Strengthen the habits and mindset that sustain lifelong love.",
-        "content": "Commitment is more than a promise made once. It is a daily posture of faithfulness, patience, service, and sacrifice. Lasting marriage is built by steady choices that protect trust and nurture connection over time.\n\nThis chapter encourages readers to think beyond the wedding into the kind of partner they want to become. It explores resilience, responsibility, boundaries, forgiveness, and the discipline required to keep love strong through change and pressure.\n\nCouples who understand commitment as action—not just emotion—are better prepared for the realities of married life. They learn that enduring love is cultivated through intention, humility, and the willingness to keep choosing one another.",
+        "content": "Commitment is more than a promise made once. It is a daily posture of faithfulness, patience, service, and sacrifice. Lasting marriage is built by steady choices that protect trust and nurture connection over time.\n\nThis chapter encourages readers to think beyond the wedding into the kind of partner they want to become. It explores resilience, responsibility, boundaries, forgiveness, and the discipline required to keep love strong through change and pressure.\n\nCouples who understand commitment as action\u2014not just emotion\u2014are better prepared for the realities of married life. They learn that enduring love is cultivated through intention, humility, and the willingness to keep choosing one another.",
         "prompts": [
           "What does dependable love look like in real daily life?",
           "How do we protect trust when life feels stressful or uncertain?",
@@ -72,7 +97,7 @@
   },
   {
     "slug": "communication-before-i-do",
-    "title": "Communication Before \"I Do\"",
+    "title": "Communication Before \u0022I Do\u0022",
     "badge": "Popular",
     "price": "$15",
     "format": "Instant PDF download",
@@ -81,7 +106,7 @@
     "selarUrl": "https://selar.co/communication-before-i-do",
     "templateKey": "classic",
     "description": "A focused guide to honest conversations, emotional safety, and healthy listening before marriage.",
-    "intro": "Strong relationships need more than affection—they need skillful communication. This book helps couples build the habits that make understanding, repair, and trust possible.",
+    "intro": "Strong relationships need more than affection\u2014they need skillful communication. This book helps couples build the habits that make understanding, repair, and trust possible.",
     "closingNote": "When couples learn how to communicate with honesty and grace, they create a safer and stronger future together.",
     "chapters": [
       {
@@ -118,7 +143,7 @@
   },
   {
     "slug": "money-purpose-and-marriage",
-    "title": "Money, Purpose & Marriage",
+    "title": "Money, Purpose \u0026 Marriage",
     "badge": "New",
     "price": "$17",
     "format": "Instant PDF download",
@@ -143,7 +168,7 @@
       {
         "title": "Chapter 2: Shared Direction",
         "summary": "Use budgeting and goal-setting to build a future together on purpose.",
-        "content": "Budgets are not only about restriction—they are about direction. Couples learn how to identify priorities, plan together, and align their resources with what matters most.\n\nShared direction transforms money from a source of confusion into a tool for stewardship and unity.",
+        "content": "Budgets are not only about restriction\u2014they are about direction. Couples learn how to identify priorities, plan together, and align their resources with what matters most.\n\nShared direction transforms money from a source of confusion into a tool for stewardship and unity.",
         "prompts": [
           "What are our top three financial priorities?",
           "How do we want money to serve our values?"
