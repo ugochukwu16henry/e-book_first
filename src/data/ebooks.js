@@ -9,6 +9,7 @@ const hydrateBook = (book) => ({
     book.focus ||
     book.description ||
     'Premarital preparation, communication, and commitment.',
+  showPdfDownload: book.showPdfDownload !== false,
   coverImage: resolveAsset(book.coverImagePath),
 });
 

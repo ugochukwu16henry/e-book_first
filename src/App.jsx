@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { BrowserRouter, Link, Navigate, Route, Routes, useParams } from 'react-router-dom';
+import { BrowserRouter, Link, Navigate, Route, Routes, useLocation, useParams } from 'react-router-dom';
 import {
   ArrowRight,
   BookOpen,
@@ -35,8 +35,8 @@ const storeHighlights = [
   },
 ];
 
-function DownloadPdfButton({ book, className = '' }) {
-  if (!book) {
+function DownloadPdfButton({ book, className = '', forceShow = false }) {
+  if (!book || (!forceShow && book.showPdfDownload === false)) {
     return null;
   }
 
@@ -188,6 +188,11 @@ function HomePage({ books, templatesByKey }) {
                     <ArrowRight className="h-4 w-4" />
                   </Link>
 
+                  <DownloadPdfButton
+                    book={book}
+                    className="border border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
+                  />
+
                   <a
                     href={book.selarUrl}
                     target="_blank"
@@ -226,6 +231,7 @@ function HomePage({ books, templatesByKey }) {
 
 function EbookPage({ books, templatesByKey }) {
   const { slug } = useParams();
+  const location = useLocation();
   const book = getEbookBySlug(books, slug);
 
   if (!books.length) {
@@ -242,6 +248,8 @@ function EbookPage({ books, templatesByKey }) {
 
   const relatedBooks = books.filter((item) => item.slug !== book.slug).slice(0, 2);
   const templateName = templatesByKey[book.templateKey]?.name || 'Custom template';
+  const adminDownloadMode = new URLSearchParams(location.search).get('adminDownload') === '1';
+  const canShowPdfButton = book.showPdfDownload !== false || adminDownloadMode;
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900">
@@ -290,10 +298,13 @@ function EbookPage({ books, templatesByKey }) {
                 <ExternalLink className="h-4 w-4" />
               </a>
 
-              <DownloadPdfButton
-                book={book}
-                className="justify-center border border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
-              />
+              {canShowPdfButton ? (
+                <DownloadPdfButton
+                  book={book}
+                  forceShow={adminDownloadMode}
+                  className="justify-center border border-slate-300 bg-white text-slate-800 hover:bg-slate-50"
+                />
+              ) : null}
             </div>
           </div>
         </div>
@@ -304,10 +315,13 @@ function EbookPage({ books, templatesByKey }) {
           <p className="mt-4 max-w-3xl text-base leading-7 text-slate-600">{book.description}</p>
 
           <div className="mt-6 flex flex-wrap gap-3">
-            <DownloadPdfButton
-              book={book}
-              className="bg-[#2E3A8C] text-white hover:bg-[#243171]"
-            />
+            {canShowPdfButton ? (
+              <DownloadPdfButton
+                book={book}
+                forceShow={adminDownloadMode}
+                className="bg-[#2E3A8C] text-white hover:bg-[#243171]"
+              />
+            ) : null}
             <a
               href={book.selarUrl}
               target="_blank"

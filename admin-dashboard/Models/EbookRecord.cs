@@ -11,6 +11,7 @@ public class EbookRecord
     public string Format { get; set; } = "Instant PDF download";
     public string CoverImagePath { get; set; } = string.Empty;
     public string PdfFileName { get; set; } = string.Empty;
+    public bool ShowPdfDownload { get; set; } = true;
     public string SelarUrl { get; set; } = string.Empty;
     public string TemplateKey { get; set; } = "premium";
     public string Description { get; set; } = string.Empty;

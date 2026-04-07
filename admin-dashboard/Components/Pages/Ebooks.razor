@@ -160,131 +160,152 @@ else
                                                 <InputText class="form-control" @bind-Value="SelectedBook.PdfFileName" />
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Selar URL</label>
-                                                <InputText class="form-control" @bind-Value="SelectedBook.SelarUrl" />
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Format label</label>
-                                                <InputText class="form-control" @bind-Value="SelectedBook.Format" />
-                                            </div>
+                                                <label class="form-label d-block">Storefront PDF button</label>
+                                                <div class="form-check mt-2">
+                                                    <InputCheckbox class="form-check-input" @bind-Value="SelectedBook.ShowPdfDownload" />
+                                                    <label class="form-check-label">Show “Download PDF” on the homepage and eBook
+                                                        page</label>
+                                                    </div>
+                                                    <div class="form-text">Turn this off to hide the public download button while keeping admin
+                                                        download access available.</div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Selar URL</label>
+                                                        <InputText class="form-control" @bind-Value="SelectedBook.SelarUrl" />
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Format label</label>
+                                                        <InputText class="form-control" @bind-Value="SelectedBook.Format" />
+                                                    </div>
 
-                                            @if (!string.IsNullOrWhiteSpace(SelectedBook.CoverImagePath))
-                                            {
-                                                <div class="col-md-6">
-                                                    <label class="form-label d-block">Cover preview</label>
-                                                    <img src="@SelectedBook.CoverImagePath" alt="@SelectedBook.Title"
-                                                         class="img-fluid rounded-3 border" style="max-height: 200px;" />
-                                                </div>
-                                            }
-
-                                            <div class="col-12">
-                                                <label class="form-label">Description</label>
-                                                <InputTextArea class="form-control" rows="3" @bind-Value="SelectedBook.Description" />
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label">Intro</label>
-                                                <RichTextEditor @bind-Value="SelectedBook.Intro" Height="180px"
-                                                                Placeholder="Write the eBook introduction..." />
-                                            </div>
-                                            <div class="col-12">
-                                                <label class="form-label">Closing note</label>
-                                                <RichTextEditor @bind-Value="SelectedBook.ClosingNote" Height="160px"
-                                                                Placeholder="Write the closing note for readers..." />
-                                            </div>
-                                        </div>
-
-                                        <hr class="my-4" />
-
-                                        <div class="d-flex justify-content-between align-items-center mb-3">
-                                            <div>
-                                                <h3 class="h5 mb-1">Chapters & lesson content</h3>
-                                                <p class="text-muted mb-0">Add new chapters, delete old ones, and use the rich text editor
-                                                    for lesson writing.</p>
-                                                </div>
-                                                <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddChapter">Add
-                                                    chapter</button>
-                                                </div>
-
-                                                <div class="d-flex flex-column gap-3">
-                                                    @for (var index = 0; index < SelectedBook.Chapters.Count; index++)
+                                                    @if (!string.IsNullOrWhiteSpace(SelectedBook.CoverImagePath))
                                                     {
-                                                        var chapter = SelectedBook.Chapters[index];
-                                                        <div class="border rounded-3 p-3 bg-light-subtle">
-                                                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                                                <strong>Chapter @(@index + 1)</strong>
-                                                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                                                        @onclick="() => RemoveChapter(chapter)">Remove</button>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label d-block">Cover preview</label>
+                                                            <img src="@SelectedBook.CoverImagePath" alt="@SelectedBook.Title"
+                                                                 class="img-fluid rounded-3 border" style="max-height: 200px;" />
+                                                        </div>
+                                                    }
+
+                                                    <div class="col-12">
+                                                        <label class="form-label d-block">Admin PDF access</label>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <a class="btn btn-outline-secondary btn-sm" href="@GetStorefrontBookUrl()"
+                                                               target="_blank" rel="noreferrer">Open eBook page</a>
+                                                            <a class="btn btn-outline-primary btn-sm" href="@GetAdminDownloadUrl()" target="_blank"
+                                                               rel="noreferrer">Open / Download PDF</a>
+                                                        </div>
+                                                        <div class="form-text">Use this when you want to download the PDF yourself and upload it to
+                                                            Selar.</div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label">Description</label>
+                                                            <InputTextArea class="form-control" rows="3" @bind-Value="SelectedBook.Description" />
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label">Intro</label>
+                                                            <RichTextEditor @bind-Value="SelectedBook.Intro" Height="180px"
+                                                                            Placeholder="Write the eBook introduction..." />
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <label class="form-label">Closing note</label>
+                                                            <RichTextEditor @bind-Value="SelectedBook.ClosingNote" Height="160px"
+                                                                            Placeholder="Write the closing note for readers..." />
+                                                        </div>
+                                                    </div>
+
+                                                    <hr class="my-4" />
+
+                                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                                        <div>
+                                                            <h3 class="h5 mb-1">Chapters & lesson content</h3>
+                                                            <p class="text-muted mb-0">Add new chapters, delete old ones, and use the rich text editor
+                                                                for lesson writing.</p>
+                                                            </div>
+                                                            <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddChapter">Add
+                                                                chapter</button>
                                                             </div>
 
-                                                            <div class="row g-3">
-                                                                <div class="col-12">
-                                                                    <label class="form-label">Chapter title</label>
-                                                                    <InputText class="form-control" @bind-Value="chapter.Title" />
-                                                                </div>
-                                                                <div class="col-12">
-                                                                    <label class="form-label">Summary / topic</label>
-                                                                    <InputTextArea class="form-control" rows="2" @bind-Value="chapter.Summary" />
-                                                                </div>
-                                                                <div class="col-12">
-                                                                    <label class="form-label">Lesson content</label>
-                                                                    <RichTextEditor @bind-Value="chapter.Content" Height="260px"
-                                                                                    Placeholder="Write the full lesson content here..." />
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="form-label">Reflection prompts (one per line)</label>
-                                                                    <InputTextArea class="form-control" rows="5" @bind-Value="chapter.PromptsText" />
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <label class="form-label">Key takeaway</label>
-                                                                    <InputTextArea class="form-control" rows="5" @bind-Value="chapter.Takeaway" />
+                                                            <div class="d-flex flex-column gap-3">
+                                                                @for (var index = 0; index < SelectedBook.Chapters.Count; index++)
+                                                                {
+                                                                    var chapter = SelectedBook.Chapters[index];
+                                                                    <div class="border rounded-3 p-3 bg-light-subtle">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                                                            <strong>Chapter @(@index + 1)</strong>
+                                                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                                                    @onclick="() => RemoveChapter(chapter)">Remove</button>
+                                                                        </div>
+
+                                                                        <div class="row g-3">
+                                                                            <div class="col-12">
+                                                                                <label class="form-label">Chapter title</label>
+                                                                                <InputText class="form-control" @bind-Value="chapter.Title" />
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                                <label class="form-label">Summary / topic</label>
+                                                                                <InputTextArea class="form-control" rows="2" @bind-Value="chapter.Summary" />
+                                                                            </div>
+                                                                            <div class="col-12">
+                                                                                <label class="form-label">Lesson content</label>
+                                                                                <RichTextEditor @bind-Value="chapter.Content" Height="260px"
+                                                                                                Placeholder="Write the full lesson content here..." />
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label class="form-label">Reflection prompts (one per line)</label>
+                                                                                <InputTextArea class="form-control" rows="5" @bind-Value="chapter.PromptsText" />
+                                                                            </div>
+                                                                            <div class="col-md-6">
+                                                                                <label class="form-label">Key takeaway</label>
+                                                                                <InputTextArea class="form-control" rows="5" @bind-Value="chapter.Takeaway" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                            <div class="card border-0 bg-body-tertiary mt-4">
+                                                                <div class="card-body">
+                                                                    <h3 class="h5 mb-2">Preview this eBook</h3>
+                                                                    <p class="text-muted">Review the content exactly as it will flow into your storefront and
+                                                                        PDF generator.</p>
+
+                                                                        <h4 class="h6 mb-1">@SelectedBook.Title</h4>
+                                                                        <p class="text-muted">@SelectedBook.Description</p>
+                                                                        <div class="mb-3">@((MarkupString)(SelectedBook.Intro ?? string.Empty))</div>
+
+                                                                        <div class="d-flex flex-column gap-3">
+                                                                            @foreach (var chapter in SelectedBook.Chapters)
+                                                                            {
+                                                                                <div class="border rounded-3 p-3 bg-white">
+                                                                                    <div class="fw-semibold">@chapter.Title</div>
+                                                                                    <div class="text-muted small mb-2">@chapter.Summary</div>
+                                                                                    <div>@((MarkupString)(chapter.Content ?? string.Empty))</div>
+                                                                                    @if (chapter.Prompts.Count > 0)
+                                                                                    {
+                                                                                        <ul class="mt-2 mb-2">
+                                                                                            @foreach (var prompt in chapter.Prompts)
+                                                                                            {
+                                                                                                <li>@prompt</li>
+                                                                                            }
+                                                                                        </ul>
+                                                                                    }
+                                                                                    @if (!string.IsNullOrWhiteSpace(chapter.Takeaway))
+                                                                                    {
+                                                                                        <div class="small text-primary fw-semibold">Takeaway: @chapter.Takeaway</div>
+                                                                                    }
+                                                                                </div>
+                                                                            }
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     }
                                                 </div>
-
-                                                <div class="card border-0 bg-body-tertiary mt-4">
-                                                    <div class="card-body">
-                                                        <h3 class="h5 mb-2">Preview this eBook</h3>
-                                                        <p class="text-muted">Review the content exactly as it will flow into your storefront and
-                                                            PDF generator.</p>
-
-                                                            <h4 class="h6 mb-1">@SelectedBook.Title</h4>
-                                                            <p class="text-muted">@SelectedBook.Description</p>
-                                                            <div class="mb-3">@((MarkupString)(SelectedBook.Intro ?? string.Empty))</div>
-
-                                                            <div class="d-flex flex-column gap-3">
-                                                                @foreach (var chapter in SelectedBook.Chapters)
-                                                                {
-                                                                    <div class="border rounded-3 p-3 bg-white">
-                                                                        <div class="fw-semibold">@chapter.Title</div>
-                                                                        <div class="text-muted small mb-2">@chapter.Summary</div>
-                                                                        <div>@((MarkupString)(chapter.Content ?? string.Empty))</div>
-                                                                        @if (chapter.Prompts.Count > 0)
-                                                                        {
-                                                                            <ul class="mt-2 mb-2">
-                                                                                @foreach (var prompt in chapter.Prompts)
-                                                                                {
-                                                                                    <li>@prompt</li>
-                                                                                }
-                                                                            </ul>
-                                                                        }
-                                                                        @if (!string.IsNullOrWhiteSpace(chapter.Takeaway))
-                                                                        {
-                                                                            <div class="small text-primary fw-semibold">Takeaway: @chapter.Takeaway</div>
-                                                                        }
-                                                                    </div>
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
-                                        }
-                                    </div>
-                                </div>
-                            </div>
-                        }
+                                        </div>
+                                    }
 
 @code {
     private List<EbookRecord> BookItems { get; set; } = [];
@@ -332,6 +353,26 @@ else
 
     private void SelectBook(EbookRecord book) => SelectedBook = book;
 
+    private string GetStorefrontBookUrl()
+    {
+        if (SelectedBook is null || string.IsNullOrWhiteSpace(SelectedBook.Slug))
+        {
+            return "http://localhost:3000/";
+        }
+
+        return $"http://localhost:3000/books/{Uri.EscapeDataString(SelectedBook.Slug)}";
+    }
+
+    private string GetAdminDownloadUrl()
+    {
+        if (SelectedBook is null || string.IsNullOrWhiteSpace(SelectedBook.Slug))
+        {
+            return "http://localhost:3000/";
+        }
+
+        return $"http://localhost:3000/books/{Uri.EscapeDataString(SelectedBook.Slug)}?adminDownload=1";
+    }
+
     private void SelectTemplate(string key)
     {
         if (SelectedBook is not null && !string.IsNullOrWhiteSpace(key))
@@ -373,6 +414,7 @@ StringComparison.OrdinalIgnoreCase))?.Name
             Format = "Instant PDF download",
             CoverImagePath = "/images/e-book-cover.svg",
             PdfFileName = $"new-ebook-{uniqueId}.pdf",
+            ShowPdfDownload = true,
             SelarUrl = "https://selar.co/your-product-link",
             TemplateKey = Templates.FirstOrDefault()?.Key ?? "premium",
             Description = "Add a short sales description for this eBook.",
