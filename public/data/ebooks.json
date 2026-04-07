@@ -1,30 +1,5 @@
 [
   {
-    "slug": "new-ebook-a2fdb9",
-    "title": "New eBook Title",
-    "badge": "Draft",
-    "price": "$0",
-    "format": "Instant PDF download",
-    "coverImagePath": "/images/e-book-cover.svg",
-    "pdfFileName": "new-ebook-a2fdb9.pdf",
-    "selarUrl": "https://selar.co/your-product-link",
-    "templateKey": "premium",
-    "description": "Add a short sales description for this eBook.",
-    "intro": "\u003Cp\u003EAdd the intro content that should appear on the product page and in the PDF.\u003C/p\u003E",
-    "closingNote": "\u003Cp\u003EAdd a strong closing note for readers.\u003C/p\u003E",
-    "chapters": [
-      {
-        "title": "Chapter 1: New Lesson",
-        "summary": "Introduce the first lesson here.",
-        "content": "\u003Cp\u003EWrite the lesson content here.\u003C/p\u003E",
-        "prompts": [
-          "Add a reflection prompt"
-        ],
-        "takeaway": "Summarize the key lesson."
-      }
-    ]
-  },
-  {
     "slug": "premarital-readiness-blueprint",
     "title": "The Premarital Readiness Blueprint",
     "badge": "Featured",
