@@ -1,5 +1,14 @@
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f8fafc;
+}
+
+.page .sidebar {
+    background: linear-gradient(180deg, #1e2a78 0%, #2e3a8c 100%);
+}
+
+.card {
+    border-radius: 1rem;
 }
 
 a, .btn-link {

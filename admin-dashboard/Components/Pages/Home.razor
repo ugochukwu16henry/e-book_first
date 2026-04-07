@@ -1,7 +1,68 @@
 ﻿@page "/"
+@inject JsonEbookRepository Repository
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Dashboard</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1 class="mb-2">eBook Admin Dashboard</h1>
+<p class="text-muted mb-4">Manage the JSON content source that powers your storefront, lesson pages, and downloadable
+    PDFs.</p>
 
-Welcome to your new app.
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-1">eBooks</div>
+                    <div class="display-6 fw-semibold">@_ebookCount</div>
+                    <div class="text-muted">Titles currently in your store</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-1">Chapters</div>
+                    <div class="display-6 fw-semibold">@_chapterCount</div>
+                    <div class="text-muted">Lesson sections across all books</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-muted small mb-1">Database</div>
+                    <div class="fw-semibold">GitHub + JSON</div>
+                    <div class="text-muted">Versioned content stored in `public/data/ebooks.json`</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="h5">How this works</h2>
+            <ol class="mb-0 text-muted">
+                <li>Edit or add eBooks from the <strong>Manage eBooks</strong> page.</li>
+                <li>Choose a PDF template for each title.</li>
+                <li>Save changes back into the shared JSON file.</li>
+                <li>Sync to GitHub so the repository remains your content database.</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-primary" href="/ebooks">Manage eBooks</a>
+        <a class="btn btn-outline-secondary" href="/templates">View PDF templates</a>
+        <a class="btn btn-outline-dark" href="http://localhost:3000" target="_blank">Open storefront</a>
+    </div>
+
+@code {
+    private int _ebookCount;
+    private int _chapterCount;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ebooks = await Repository.GetAllAsync();
+        _ebookCount = ebooks.Count;
+        _chapterCount = ebooks.Sum(book => book.Chapters?.Count ?? 0);
+    }
+}

@@ -1,10 +1,21 @@
+using System.Net.Http.Headers;
 using EbookAdmin.Components;
+using EbookAdmin.Models;
+using EbookAdmin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.Configure<GitHubSyncOptions>(builder.Configuration.GetSection("GitHubSync"));
+builder.Services.AddScoped<JsonEbookRepository>();
+builder.Services.AddScoped<GitHubSyncService>();
+builder.Services.AddHttpClient("github", client =>
+{
+    client.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("EbookAdmin", "1.0"));
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/vnd.github+json"));
+});
 
 var app = builder.Build();
 
