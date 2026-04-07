@@ -1,0 +1,202 @@
+const asset = (path) =>
+  typeof window !== 'undefined' ? `${window.location.origin}${path}` : path;
+
+export const ebooks = [
+  {
+    slug: 'premarital-readiness-blueprint',
+    title: 'The Premarital Readiness Blueprint',
+    badge: 'Featured',
+    price: '$19',
+    format: 'Instant PDF download',
+    coverImagePath: '/images/E-book%20cover.jfif',
+    coverImage: asset('/images/E-book%20cover.jfif'),
+    pdfFileName: 'the-premarital-readiness-blueprint.pdf',
+    selarUrl: 'https://selar.co/premarital-readiness-blueprint',
+    description:
+      'A practical, faith-aware guide for couples preparing for a strong and intentional future.',
+    intro:
+      'This premium guide helps couples move beyond romantic excitement into thoughtful preparation. It brings together emotional insight, relationship wisdom, and practical conversation prompts so readers can prepare for marriage with greater clarity, trust, and maturity.',
+    closingNote:
+      'Premarital preparation is one of the wisest gifts a couple can give their future. A thoughtful beginning creates stronger ground for love, trust, and lifelong partnership.',
+    chapters: [
+      {
+        title: 'Chapter 1: The Foundation',
+        summary: 'Build the relationship on clarity, identity, and spiritual alignment.',
+        content: `Before couples plan a future together, they need to understand the foundation they are standing on. A healthy marriage is not built only on chemistry or shared attraction. It is built on values, convictions, emotional maturity, and a clear understanding of purpose.
+
+This chapter invites each person to examine expectations about love, commitment, spiritual leadership, and family life. Many couples carry hidden assumptions from childhood, culture, or previous relationships. Naming those assumptions early can prevent avoidable pain later.
+
+A strong foundation also asks deeper questions: Are we individually prepared for covenant responsibility? Are we building toward the same kind of life? When couples slow down to answer these questions well, they begin their journey with wisdom instead of confusion.`,
+        prompts: [
+          'What beliefs about marriage did I inherit from my family or past experiences?',
+          'Where do we already feel aligned, and where do we still need clarity?',
+          'What does emotional and spiritual readiness look like for each of us right now?',
+        ],
+        takeaway: 'A wise marriage starts with a clear foundation, not vague assumptions.',
+      },
+      {
+        title: 'Chapter 2: Communication',
+        summary: 'Create emotional safety through listening, empathy, and truthfulness.',
+        content: `Communication is more than words. It includes tone, timing, body language, emotional awareness, and the willingness to truly hear another person. Many couples speak often but still feel unseen because they have not learned how to listen deeply and respond with care.
+
+This chapter focuses on practical communication habits such as slowing down reactive conversations, asking better questions, clarifying what was heard, and being honest without being harsh. It also emphasizes emotional safety, because trust grows when both people feel respected, not dismissed.
+
+Good communication is not perfection. It is the repeated choice to move toward understanding rather than defensiveness. When couples strengthen this skill early, they build a pattern that protects the relationship during both ordinary days and difficult seasons.`,
+        prompts: [
+          'When conflict rises, do I tend to withdraw, attack, or stay present?',
+          'What helps me feel truly heard and understood in conversation?',
+          'How can we make hard discussions feel safer and more productive?',
+        ],
+        takeaway: 'Great relationships are strengthened by honest words delivered with grace.',
+      },
+      {
+        title: 'Chapter 3: Conflict Resolution',
+        summary: 'Handle disagreements in a way that protects connection instead of damaging it.',
+        content: `Conflict is not proof that a relationship is failing. Often, it simply reveals where two people are different, wounded, tired, or misunderstood. What matters most is not whether conflict appears, but how it is handled when it does.
+
+In this chapter, couples learn to identify unhealthy patterns such as contempt, blame, stonewalling, and scorekeeping. They also practice repair habits like taking responsibility, pausing before reacting, clarifying intent, and returning to the conversation with humility.
+
+Healthy conflict resolution creates trust because it shows that the relationship can survive truth. Instead of trying to win, couples learn how to understand, solve, and reconnect.`,
+        prompts: [
+          'What triggers us most quickly during disagreement?',
+          'How do we know when it is time to pause instead of pushing harder?',
+          'What would repair and accountability look like after a hard conversation?',
+        ],
+        takeaway: 'The goal of conflict is not victory, but understanding and repair.',
+      },
+      {
+        title: 'Chapter 4: Shared Values',
+        summary: 'Align your life around what matters most before marriage begins.',
+        content: `Couples often assume they are aligned because they enjoy being together, but long-term unity requires more than affection. It requires agreement on deeper questions of faith, purpose, finances, family rhythms, boundaries, and future vision.
+
+This chapter helps couples explore the values that will shape daily life after the wedding. How will money be managed? What does family leadership look like? What role will faith play in the home? Clarity in these areas creates peace and direction.
+
+Shared values do not mean identical personalities. They mean building life around common commitments. When couples become intentional here, they reduce confusion and create a stronger sense of partnership and mutual trust.`,
+        prompts: [
+          'What values do we want to define our home and future family?',
+          'How do we each think about faith, finances, service, and priorities?',
+          'Which expectations need to be discussed now rather than later?',
+        ],
+        takeaway: 'A unified future grows from shared values practiced consistently.',
+      },
+      {
+        title: 'Chapter 5: Commitment',
+        summary: 'Strengthen the habits and mindset that sustain lifelong love.',
+        content: `Commitment is more than a promise made once. It is a daily posture of faithfulness, patience, service, and sacrifice. Lasting marriage is built by steady choices that protect trust and nurture connection over time.
+
+This chapter encourages readers to think beyond the wedding into the kind of partner they want to become. It explores resilience, responsibility, boundaries, forgiveness, and the discipline required to keep love strong through change and pressure.
+
+Couples who understand commitment as action—not just emotion—are better prepared for the realities of married life. They learn that enduring love is cultivated through intention, humility, and the willingness to keep choosing one another.`,
+        prompts: [
+          'What does dependable love look like in real daily life?',
+          'How do we protect trust when life feels stressful or uncertain?',
+          'What rhythms will help us keep growing together after marriage begins?',
+        ],
+        takeaway: 'Strong commitment is built through consistent choices, not occasional feelings.',
+      },
+    ],
+  },
+  {
+    slug: 'communication-before-i-do',
+    title: 'Communication Before “I Do”',
+    badge: 'Popular',
+    price: '$15',
+    format: 'Instant PDF download',
+    coverImagePath: '/images/communication-before-i-do.svg',
+    coverImage: asset('/images/communication-before-i-do.svg'),
+    pdfFileName: 'communication-before-i-do.pdf',
+    selarUrl: 'https://selar.co/communication-before-i-do',
+    description:
+      'A focused guide to honest conversations, emotional safety, and healthy listening before marriage.',
+    intro:
+      'Strong relationships need more than affection—they need skillful communication. This book helps couples build the habits that make understanding, repair, and trust possible.',
+    closingNote:
+      'When couples learn how to communicate with honesty and grace, they create a safer and stronger future together.',
+    chapters: [
+      {
+        title: 'Chapter 1: Listening with Intention',
+        summary: 'Move from reacting quickly to listening with patience and care.',
+        content: `Many people listen to reply instead of listening to understand. This chapter teaches couples how to slow down, reflect back what they heard, and respond in a way that makes the other person feel seen.
+
+Intentional listening builds emotional security because it communicates value. It says: your thoughts matter, your emotions matter, and this relationship is worth careful attention.`,
+        prompts: [
+          'Do I interrupt too quickly when I feel misunderstood?',
+          'How can I show curiosity instead of defensiveness?',
+        ],
+        takeaway: 'Listening well is one of the clearest forms of love.',
+      },
+      {
+        title: 'Chapter 2: Speaking Truth with Grace',
+        summary: 'Learn how to be honest without becoming harsh or reactive.',
+        content: `Truth is necessary in any serious relationship, but the way truth is expressed determines whether it heals or harms. Couples learn to use timing, tone, and empathy so hard conversations remain productive.
+
+Speaking with grace means choosing clarity over accusation and honesty over avoidance.`,
+        prompts: [
+          'What makes it hard for me to speak honestly?',
+          'How can I bring up difficult topics more gently and clearly?',
+        ],
+        takeaway: 'Healthy honesty is firm, clear, and respectful.',
+      },
+      {
+        title: 'Chapter 3: Repairing After Tension',
+        summary: 'Use apology, ownership, and reconnection to restore trust after conflict.',
+        content: `Every relationship experiences tension. The key is learning how to repair quickly and sincerely. This chapter gives couples language for apology, ownership, and emotional reconnection.
+
+Repair strengthens trust because it proves the relationship is strong enough for truth and humility.`,
+        prompts: [
+          'What helps me feel repaired after a disagreement?',
+          'How can we reconnect more quickly after conflict?',
+        ],
+        takeaway: 'Fast, sincere repair keeps small hurts from becoming deep wounds.',
+      },
+    ],
+  },
+  {
+    slug: 'money-purpose-and-marriage',
+    title: 'Money, Purpose & Marriage',
+    badge: 'New',
+    price: '$17',
+    format: 'Instant PDF download',
+    coverImagePath: '/images/money-purpose-and-marriage.svg',
+    coverImage: asset('/images/money-purpose-and-marriage.svg'),
+    pdfFileName: 'money-purpose-and-marriage.pdf',
+    selarUrl: 'https://selar.co/money-purpose-and-marriage',
+    description:
+      'A practical guide for couples aligning finances, goals, stewardship, and long-term vision.',
+    intro:
+      'Financial conversations often reveal deeper issues of trust, responsibility, and values. This guide helps couples move from vague hopes into shared plans and wise stewardship.',
+    closingNote:
+      'Money becomes less stressful when couples build habits of transparency, planning, and shared purpose.',
+    chapters: [
+      {
+        title: 'Chapter 1: Financial Honesty',
+        summary: 'Create trust through transparency about income, spending, and expectations.',
+        content: `Financial trust begins with honesty. Couples need enough openness to discuss earning patterns, debt, spending habits, and personal expectations without shame or secrecy.
+
+This chapter provides practical questions that create clarity early and help couples build confidence as a team.`,
+        prompts: ['What financial habits am I bringing into marriage?', 'Where do we need greater transparency?'],
+        takeaway: 'Financial peace starts with financial honesty.',
+      },
+      {
+        title: 'Chapter 2: Shared Direction',
+        summary: 'Use budgeting and goal-setting to build a future together on purpose.',
+        content: `Budgets are not only about restriction—they are about direction. Couples learn how to identify priorities, plan together, and align their resources with what matters most.
+
+Shared direction transforms money from a source of confusion into a tool for stewardship and unity.`,
+        prompts: ['What are our top three financial priorities?', 'How do we want money to serve our values?'],
+        takeaway: 'A shared plan reduces stress and strengthens teamwork.',
+      },
+      {
+        title: 'Chapter 3: Stewardship and Generosity',
+        summary: 'Build a home marked by wisdom, discipline, and open-handed living.',
+        content: `Marriage thrives when stewardship is practiced with maturity and generosity. This chapter explores saving, margin, contentment, and the role of giving in shaping family culture.
+
+Wise stewardship is not only about managing money well; it is also about becoming the kind of people who can be trusted with it.`,
+        prompts: ['What does faithful stewardship mean to us?', 'How do we want generosity to shape our future home?'],
+        takeaway: 'Financial maturity supports peace, purpose, and service.',
+      },
+    ],
+  },
+];
+
+export const getEbookBySlug = (slug) => ebooks.find((ebook) => ebook.slug === slug);
