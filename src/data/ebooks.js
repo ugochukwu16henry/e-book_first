@@ -1,6 +1,13 @@
 const resolveAsset = (path) =>
   typeof window !== 'undefined' ? `${window.location.origin}${path}` : path;
 
+const hydrateChapter = (chapter = {}) => ({
+  ...chapter,
+  illustrationImage: chapter.illustrationImagePath
+    ? resolveAsset(chapter.illustrationImagePath)
+    : '',
+});
+
 const hydrateBook = (book) => ({
   ...book,
   author: book.author || 'Henry Ugochukwu',
@@ -11,6 +18,7 @@ const hydrateBook = (book) => ({
     'Premarital preparation, communication, and commitment.',
   showPdfDownload: book.showPdfDownload !== false,
   coverImage: resolveAsset(book.coverImagePath),
+  chapters: Array.isArray(book.chapters) ? book.chapters.map(hydrateChapter) : [],
 });
 
 async function readJson(path, fallback = []) {

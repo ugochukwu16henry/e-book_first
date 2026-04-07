@@ -222,6 +222,25 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     textAlign: 'justify',
   },
+  chapterIllustrationWrap: {
+    marginTop: 6,
+    marginBottom: 14,
+    padding: 8,
+    borderRadius: 12,
+    borderWidth: 1,
+  },
+  chapterIllustration: {
+    width: '100%',
+    height: 190,
+    objectFit: 'cover',
+    borderRadius: 8,
+  },
+  chapterCaption: {
+    fontSize: 8.5,
+    marginTop: 6,
+    textAlign: 'center',
+    lineHeight: 1.4,
+  },
   tocRow: {
     flexDirection: 'row',
     paddingVertical: 10,
@@ -366,48 +385,61 @@ export const MyEbook = ({ data }) => {
         />
       </Page>
 
-      {chapters.map((chapter, index) => (
-        <Page key={chapter.title || index} size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
-          <Text style={[styles.label, { color: theme.accent }]}>{`CHAPTER ${String(index + 1).padStart(2, '0')}`}</Text>
-          <Text style={[styles.chapterTitle, { color: theme.accent }]}>{chapter.title || `Chapter ${index + 1}`}</Text>
-          <Text style={[styles.summary, { color: theme.subtext }]}>{chapter.summary || ''}</Text>
-          <View style={[styles.divider, { borderBottomColor: theme.line }]} />
+{chapters.map((chapter, index) => {
+        const illustrationSource = chapter.illustrationImage || chapter.illustrationImagePath;
 
-          <View>
-            {toParagraphs(chapter.content || 'Content goes here...').map((paragraph, paragraphIndex) => (
-              <Text key={paragraphIndex} style={[styles.paragraph, { color: theme.text }]}>
-                {paragraph}
-              </Text>
-            ))}
-          </View>
+        return (
+          <Page key={chapter.title || index} size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
+            <Text style={[styles.label, { color: theme.accent }]}>{`CHAPTER ${String(index + 1).padStart(2, '0')}`}</Text>
+            <Text style={[styles.chapterTitle, { color: theme.accent }]}>{chapter.title || `Chapter ${index + 1}`}</Text>
+            <Text style={[styles.summary, { color: theme.subtext }]}>{chapter.summary || ''}</Text>
+            <View style={[styles.divider, { borderBottomColor: theme.line }]} />
 
-          {chapter.takeaway ? (
-            <View style={[styles.takeawayBox, { backgroundColor: theme.highlightBg, borderColor: theme.line }]}>
-              <Text style={[styles.takeawayLabel, { color: theme.accent }]}>KEY TAKEAWAY</Text>
-              <Text style={[styles.takeawayText, { color: theme.text }]}>{chapter.takeaway}</Text>
-            </View>
-          ) : null}
+            {illustrationSource ? (
+              <View style={[styles.chapterIllustrationWrap, { backgroundColor: theme.cardBg, borderColor: theme.line }]}>
+                <Image src={illustrationSource} style={styles.chapterIllustration} />
+                {chapter.illustrationCaption ? (
+                  <Text style={[styles.chapterCaption, { color: theme.subtext }]}>{chapter.illustrationCaption}</Text>
+                ) : null}
+              </View>
+            ) : null}
 
-          {chapter.prompts?.length ? (
             <View>
-              <Text style={[styles.subheading, { color: theme.accent }]}>Reflection prompts</Text>
-              {chapter.prompts.map((prompt, promptIndex) => (
-                <Text key={promptIndex} style={[styles.bullet, { color: theme.text }]}>
-                  • {prompt}
+              {toParagraphs(chapter.content || 'Content goes here...').map((paragraph, paragraphIndex) => (
+                <Text key={paragraphIndex} style={[styles.paragraph, { color: theme.text }]}> 
+                  {paragraph}
                 </Text>
               ))}
             </View>
-          ) : null}
 
-          <Text
-            style={styles.footer}
-            render={({ pageNumber, totalPages }) =>
-              `Page ${pageNumber} of ${totalPages} | ${footerNote}`
-            }
-            fixed
-          />
-        </Page>
-      ))}
+            {chapter.takeaway ? (
+              <View style={[styles.takeawayBox, { backgroundColor: theme.highlightBg, borderColor: theme.line }]}> 
+                <Text style={[styles.takeawayLabel, { color: theme.accent }]}>KEY TAKEAWAY</Text>
+                <Text style={[styles.takeawayText, { color: theme.text }]}>{chapter.takeaway}</Text>
+              </View>
+            ) : null}
+
+            {chapter.prompts?.length ? (
+              <View>
+                <Text style={[styles.subheading, { color: theme.accent }]}>Reflection prompts</Text>
+                {chapter.prompts.map((prompt, promptIndex) => (
+                  <Text key={promptIndex} style={[styles.bullet, { color: theme.text }]}> 
+                    • {prompt}
+                  </Text>
+                ))}
+              </View>
+            ) : null}
+
+            <Text
+              style={styles.footer}
+              render={({ pageNumber, totalPages }) =>
+                `Page ${pageNumber} of ${totalPages} | ${footerNote}`
+              }
+              fixed
+            />
+          </Page>
+        );
+      })}
 
       <Page size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
         <Text style={[styles.label, { color: theme.accent }]}>FINAL NOTE</Text>

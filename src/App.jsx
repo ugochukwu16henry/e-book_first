@@ -17,6 +17,8 @@ import { MyEbook } from './EbookDocument';
 import { fetchEbooks, fetchPdfTemplates, getEbookBySlug } from './data/ebooks';
 import './App.css';
 
+const renderHtml = (value = '') => ({ __html: value || '' });
+
 const storeHighlights = [
   {
     icon: ShoppingBag,
@@ -335,7 +337,10 @@ function EbookPage({ books, templatesByKey }) {
 
           <div className="mt-8 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
             <h2 className="text-xl font-semibold text-slate-900">What’s inside</h2>
-            <p className="mt-2 text-sm leading-6 text-slate-600">{book.intro}</p>
+            <div
+              className="mt-2 text-sm leading-6 text-slate-600 [&_p]:mb-3 [&_ul]:mb-3 [&_ol]:mb-3"
+              dangerouslySetInnerHTML={renderHtml(book.intro)}
+            />
 
             <div className="mt-6 space-y-4">
               {book.chapters.map((chapter, index) => (
@@ -347,6 +352,18 @@ function EbookPage({ books, templatesByKey }) {
                     <h3 className="font-semibold text-slate-900">{chapter.title}</h3>
                   </div>
                   <p className="text-sm leading-6 text-slate-600">{chapter.summary}</p>
+                  {chapter.illustrationImage || chapter.illustrationImagePath ? (
+                    <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                      <img
+                        src={chapter.illustrationImage || chapter.illustrationImagePath}
+                        alt={chapter.illustrationCaption || chapter.title}
+                        className="h-56 w-full object-cover"
+                      />
+                      {chapter.illustrationCaption ? (
+                        <div className="px-4 py-2 text-xs text-slate-500">{chapter.illustrationCaption}</div>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>

@@ -25,6 +25,8 @@ public class ChapterRecord
     public string Title { get; set; } = string.Empty;
     public string Summary { get; set; } = string.Empty;
     public string Content { get; set; } = string.Empty;
+    public string IllustrationImagePath { get; set; } = string.Empty;
+    public string IllustrationCaption { get; set; } = string.Empty;
     public List<string> Prompts { get; set; } = [];
     public string Takeaway { get; set; } = string.Empty;
 
