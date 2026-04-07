@@ -1,5 +1,23 @@
 import { Document, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
+const toPlainText = (value = '') =>
+  value
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/(p|div|h1|h2|h3|h4|li|blockquote|ul|ol)>/gi, '$&\n')
+    .replace(/<li>/gi, '• ')
+    .replace(/<[^>]+>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+
+const toParagraphs = (value = '') => {
+  const cleaned = toPlainText(value);
+  return cleaned ? cleaned.split(/\n\n+/) : ['Content goes here...'];
+};
+
 const themes = {
   premium: {
     label: 'PREMIUM EDITORIAL',
@@ -194,7 +212,7 @@ export const MyEbook = ({ data }) => {
         <Text style={[styles.label, { color: theme.accent }]}>{theme.label}</Text>
         <Text style={[styles.title, { color: theme.accent }]}>{data?.title || 'The Premarital Readiness Blueprint'}</Text>
         <Text style={[styles.subtitle, { color: theme.subtext }]}>
-          {data?.description || data?.subtitle || 'A practical guide for couples preparing for a strong, faith-centered future.'}
+          {toPlainText(data?.description || data?.subtitle || 'A practical guide for couples preparing for a strong, faith-centered future.')}
         </Text>
         <View style={[styles.divider, { borderBottomColor: theme.line }]} />
 
@@ -205,8 +223,10 @@ export const MyEbook = ({ data }) => {
 
           <View style={styles.coverInfo}>
             <Text style={[styles.paragraph, { color: theme.text }]}>
-              {data?.intro ||
-                'This eBook is designed to help couples build a thoughtful foundation for a healthy, lasting marriage.'}
+              {toPlainText(
+                data?.intro ||
+                  'This eBook is designed to help couples build a thoughtful foundation for a healthy, lasting marriage.'
+              )}
             </Text>
 
             <View style={[styles.infoCard, { backgroundColor: theme.cardBg, borderColor: theme.line }]}>
@@ -259,7 +279,7 @@ export const MyEbook = ({ data }) => {
           <View style={[styles.divider, { borderBottomColor: theme.line }]} />
 
           <View>
-            {(chapter.content || 'Content goes here...').split('\n\n').map((paragraph, paragraphIndex) => (
+            {toParagraphs(chapter.content || 'Content goes here...').map((paragraph, paragraphIndex) => (
               <Text key={paragraphIndex} style={[styles.paragraph, { color: theme.text }]}>
                 {paragraph}
               </Text>
@@ -299,8 +319,10 @@ export const MyEbook = ({ data }) => {
         <Text style={[styles.heading, { color: theme.accent }]}>A wise beginning shapes a strong future</Text>
         <View style={[styles.divider, { borderBottomColor: theme.line }]} />
         <Text style={[styles.paragraph, { color: theme.text }]}>
-          {data?.closingNote ||
-            'Thoughtful preparation creates stronger ground for love, trust, and lifelong partnership.'}
+          {toPlainText(
+            data?.closingNote ||
+              'Thoughtful preparation creates stronger ground for love, trust, and lifelong partnership.'
+          )}
         </Text>
         <Text style={[styles.paragraph, { color: theme.text }]}>
           Use this eBook as a conversation guide, a reflection tool, and a reminder that strong marriages are built with intention. When couples prepare honestly and prayerfully, they are better equipped to create a relationship marked by grace, trust, and enduring commitment.

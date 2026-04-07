@@ -18,11 +18,15 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/login";
         options.AccessDeniedPath = "/login";
         options.Cookie.Name = "ebookadmin.auth";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(Math.Clamp(builder.Configuration.GetValue<int?>("AdminCredentials:IdleTimeoutMinutes") ?? 30, 5, 1440));
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
     });
 builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<GitHubSyncOptions>(builder.Configuration.GetSection("GitHubSync"));
 builder.Services.Configure<AdminCredentialsOptions>(builder.Configuration.GetSection("AdminCredentials"));
+builder.Services.AddScoped<AdminAuthService>();
 builder.Services.AddScoped<JsonEbookRepository>();
 builder.Services.AddScoped<GitHubSyncService>();
 builder.Services.AddScoped<GitAutomationService>();
@@ -52,30 +56,41 @@ app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
-app.MapPost("/auth/login", async (HttpContext context, Microsoft.Extensions.Options.IOptions<AdminCredentialsOptions> credentials) =>
+app.MapPost("/auth/login", async (HttpContext context, AdminAuthService authService) =>
 {
     var form = await context.Request.ReadFormAsync();
     var email = form["email"].ToString().Trim();
     var password = form["password"].ToString();
     var returnUrl = form["returnUrl"].ToString();
-    var settings = credentials.Value;
 
-    var isValid = string.Equals(email, settings.Email, StringComparison.OrdinalIgnoreCase) && password == settings.Password;
-    if (!isValid)
+    var user = authService.Validate(email, password);
+    if (user is null)
     {
         return Results.LocalRedirect("/login?error=1");
     }
 
     var claims = new List<Claim>
     {
-        new(ClaimTypes.Name, settings.DisplayName),
-        new(ClaimTypes.Email, settings.Email),
+        new(ClaimTypes.Name, user.DisplayName),
+        new(ClaimTypes.Email, user.Email),
         new(ClaimTypes.Role, "Admin")
     };
 
+    foreach (var role in user.Roles.Distinct(StringComparer.OrdinalIgnoreCase))
+    {
+        claims.Add(new Claim(ClaimTypes.Role, role));
+    }
+
     var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
     var principal = new ClaimsPrincipal(identity);
-    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+    var authProperties = new AuthenticationProperties
+    {
+        IsPersistent = false,
+        AllowRefresh = true,
+        ExpiresUtc = DateTimeOffset.UtcNow.Add(authService.GetIdleTimeout())
+    };
+
+    await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
 
     return Results.LocalRedirect(string.IsNullOrWhiteSpace(returnUrl) ? "/" : returnUrl);
 }).DisableAntiforgery();

@@ -11,6 +11,28 @@ html, body {
     border-radius: 1rem;
 }
 
+.rich-editor-toolbar {
+    flex-wrap: wrap;
+}
+
+.rich-editor-surface {
+    min-height: 220px;
+    background: #fff;
+    overflow: auto;
+    line-height: 1.6;
+}
+
+.rich-editor-surface:empty:before {
+    content: attr(data-placeholder);
+    color: #94a3b8;
+}
+
+.rich-editor-surface:focus {
+    outline: none;
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+}
+
 a, .btn-link {
     color: #006bb7;
 }

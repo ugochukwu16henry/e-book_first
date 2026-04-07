@@ -1,0 +1,49 @@
+@page "/users"
+@attribute [Authorize(Roles = "SuperAdmin")]
+@inject AdminAuthService AdminAuth
+
+<PageTitle>Admin Users</PageTitle>
+
+<h1 class="mb-2">Admin users & roles</h1>
+<p class="text-muted mb-4">Your Blazor dashboard now supports multiple admin users and role-based access. Add or edit
+    users in <code>admin-dashboard/appsettings.json</code>.</p>
+
+    <div class="row g-4 mb-4">
+        @foreach (var user in _users)
+        {
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                            <div>
+                                <h2 class="h5 mb-1">@user.DisplayName</h2>
+                                <div class="text-muted small">@user.Email</div>
+                            </div>
+                            <span class="badge text-bg-light">@string.Join(", ", user.Roles)</span>
+                        </div>
+
+                        <p class="mb-0 text-muted">Status: @(user.Disabled ? "Disabled" : "Active")</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body">
+            <h3 class="h5">Session timeout</h3>
+            <p class="text-muted mb-0">Admin sessions automatically time out after <strong>@_timeoutMinutes minutes of
+                inactivity</strong>.</p>
+            </div>
+        </div>
+
+@code {
+    private IReadOnlyList<AdminUserDefinition> _users = [];
+    private int _timeoutMinutes;
+
+    protected override void OnInitialized()
+    {
+        _users = AdminAuth.GetUsers();
+        _timeoutMinutes = (int)AdminAuth.GetIdleTimeout().TotalMinutes;
+    }
+}

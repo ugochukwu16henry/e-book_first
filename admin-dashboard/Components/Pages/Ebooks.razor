@@ -1,6 +1,7 @@
 @page "/ebooks"
 @attribute [Authorize]
 @rendermode InteractiveServer
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject JsonEbookRepository Repository
 @inject GitHubSyncService GitHubSync
 @inject GitAutomationService GitAutomation
@@ -16,19 +17,23 @@ else
     <div class="d-flex flex-column gap-4">
         <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
             <div>
+                <div class="small text-uppercase text-primary fw-semibold mb-1">Role-based editor</div>
                 <h1 class="mb-1">Manage eBooks</h1>
-                <p class="text-muted mb-0">Edit all lesson content, add new books, delete old ones, upload covers, and
-                    preview every eBook before it reaches the storefront.</p>
+                <p class="text-muted mb-0">Edit lessons, topics, chapters, covers, and previews from one dashboard. Active
+                    roles: <strong>@CurrentRolesLabel</strong>.</p>
                 </div>
 
                 <div class="d-flex flex-wrap gap-2">
                     <button type="button" class="btn btn-outline-primary" @onclick="AddEbook">New eBook</button>
                     <button type="button" class="btn btn-primary" @onclick="SaveAsync" disabled="@IsSaving">
-                        @(IsSaving ? "Saving..." : "Save + Auto Push")
+                        @(IsSaving ? "Saving..." : CanPushChanges ? "Save + Auto Push" : "Save JSON")
                     </button>
-                    <button type="button" class="btn btn-dark" @onclick="SyncToGitHubAsync" disabled="@IsSyncing">
-                        @(IsSyncing ? "Syncing..." : "Manual GitHub Sync")
-                    </button>
+                    @if (CanPushChanges)
+                    {
+                        <button type="button" class="btn btn-dark" @onclick="SyncToGitHubAsync" disabled="@IsSyncing">
+                            @(IsSyncing ? "Syncing..." : "Manual GitHub Sync")
+                        </button>
+                    }
                 </div>
             </div>
 
@@ -77,11 +82,15 @@ else
                                     <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
                                         <div>
                                             <h2 class="h4 mb-1">@SelectedBook.Title</h2>
-                                            <p class="text-muted mb-0">This form updates the shared <code>public/data/ebooks.json</code>
-                                                content source.</p>
+                                            <p class="text-muted mb-0">This editor updates the shared
+                                                <code>public/data/ebooks.json</code> content source used by the storefront and PDF
+                                                downloads.</p>
                                             </div>
-                                            <button type="button" class="btn btn-outline-danger btn-sm" @onclick="RemoveSelectedBook">Delete
-                                                eBook</button>
+                                            @if (CanDeleteBooks)
+                                            {
+                                                <button type="button" class="btn btn-outline-danger btn-sm" @onclick="RemoveSelectedBook">Delete
+                                                    eBook</button>
+                                                }
                                             </div>
 
                                             <div class="row g-3">
@@ -130,6 +139,7 @@ else
                                                     <label class="form-label">Format label</label>
                                                     <InputText class="form-control" @bind-Value="SelectedBook.Format" />
                                                 </div>
+
                                                 @if (!string.IsNullOrWhiteSpace(SelectedBook.CoverImagePath))
                                                 {
                                                     <div class="col-md-6">
@@ -138,17 +148,20 @@ else
                                                              class="img-fluid rounded-3 border" style="max-height: 200px;" />
                                                     </div>
                                                 }
+
                                                 <div class="col-12">
                                                     <label class="form-label">Description</label>
                                                     <InputTextArea class="form-control" rows="3" @bind-Value="SelectedBook.Description" />
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="form-label">Intro</label>
-                                                    <InputTextArea class="form-control" rows="4" @bind-Value="SelectedBook.Intro" />
+                                                    <RichTextEditor @bind-Value="SelectedBook.Intro" Height="180px"
+                                                                    Placeholder="Write the eBook introduction..." />
                                                 </div>
                                                 <div class="col-12">
                                                     <label class="form-label">Closing note</label>
-                                                    <InputTextArea class="form-control" rows="3" @bind-Value="SelectedBook.ClosingNote" />
+                                                    <RichTextEditor @bind-Value="SelectedBook.ClosingNote" Height="160px"
+                                                                    Placeholder="Write the closing note for readers..." />
                                                 </div>
                                             </div>
 
@@ -157,8 +170,8 @@ else
                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                 <div>
                                                     <h3 class="h5 mb-1">Chapters & lesson content</h3>
-                                                    <p class="text-muted mb-0">Add, delete, and edit every lesson, topic summary, prompt, and
-                                                        takeaway.</p>
+                                                    <p class="text-muted mb-0">Add new chapters, delete old ones, and use the rich text editor
+                                                        for lesson writing.</p>
                                                     </div>
                                                     <button type="button" class="btn btn-outline-primary btn-sm" @onclick="AddChapter">Add
                                                         chapter</button>
@@ -186,7 +199,8 @@ else
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <label class="form-label">Lesson content</label>
-                                                                        <InputTextArea class="form-control" rows="7" @bind-Value="chapter.Content" />
+                                                                        <RichTextEditor @bind-Value="chapter.Content" Height="260px"
+                                                                                        Placeholder="Write the full lesson content here..." />
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label class="form-label">Reflection prompts (one per line)</label>
@@ -204,12 +218,12 @@ else
                                                     <div class="card border-0 bg-body-tertiary mt-4">
                                                         <div class="card-body">
                                                             <h3 class="h5 mb-2">Preview this eBook</h3>
-                                                            <p class="text-muted">The preview below helps the admin review what will appear on the
-                                                                frontend and in the downloadable PDF.</p>
+                                                            <p class="text-muted">Review the content exactly as it will flow into your storefront and
+                                                                PDF generator.</p>
 
                                                                 <h4 class="h6 mb-1">@SelectedBook.Title</h4>
                                                                 <p class="text-muted">@SelectedBook.Description</p>
-                                                                <p>@SelectedBook.Intro</p>
+                                                                <div class="mb-3">@((MarkupString)(SelectedBook.Intro ?? string.Empty))</div>
 
                                                                 <div class="d-flex flex-column gap-3">
                                                                     @foreach (var chapter in SelectedBook.Chapters)
@@ -217,7 +231,7 @@ else
                                                                         <div class="border rounded-3 p-3 bg-white">
                                                                             <div class="fw-semibold">@chapter.Title</div>
                                                                             <div class="text-muted small mb-2">@chapter.Summary</div>
-                                                                            <div style="white-space: pre-wrap;">@chapter.Content</div>
+                                                                            <div>@((MarkupString)(chapter.Content ?? string.Empty))</div>
                                                                             @if (chapter.Prompts.Count > 0)
                                                                             {
                                                                                 <ul class="mt-2 mb-2">
@@ -251,12 +265,16 @@ else
     private bool IsLoading { get; set; } = true;
     private bool IsSaving { get; set; }
     private bool IsSyncing { get; set; }
+    private bool CanDeleteBooks { get; set; }
+    private bool CanPushChanges { get; set; }
+    private string CurrentRolesLabel { get; set; } = "Admin";
     private string? StatusMessage { get; set; }
     private string StatusCss { get; set; } = "alert alert-info";
 
     protected override async Task OnInitializedAsync()
     {
         await LoadAsync();
+        await LoadPermissionsAsync();
     }
 
     private async Task LoadAsync()
@@ -266,6 +284,22 @@ else
         Templates = await Repository.GetTemplatesAsync();
         SelectedBook = BookItems.FirstOrDefault();
         IsLoading = false;
+    }
+
+    private async Task LoadPermissionsAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        CanDeleteBooks = user.IsInRole("SuperAdmin");
+        CanPushChanges = user.IsInRole("SuperAdmin");
+
+        var roles = new[] { "SuperAdmin", "Editor", "Admin" }
+            .Where(user.IsInRole)
+            .Distinct()
+            .ToArray();
+
+        CurrentRolesLabel = roles.Length > 0 ? string.Join(", ", roles) : "Admin";
     }
 
     private void SelectBook(EbookRecord book) => SelectedBook = book;
@@ -285,15 +319,15 @@ else
             SelarUrl = "https://selar.co/your-product-link",
             TemplateKey = Templates.FirstOrDefault()?.Key ?? "premium",
             Description = "Add a short sales description for this eBook.",
-            Intro = "Add the intro content that should appear on the product page and in the PDF.",
-            ClosingNote = "Add a strong closing note for readers.",
+            Intro = "<p>Add the intro content that should appear on the product page and in the PDF.</p>",
+            ClosingNote = "<p>Add a strong closing note for readers.</p>",
             Chapters =
             [
                 new ChapterRecord
                 {
                     Title = "Chapter 1: New Lesson",
                     Summary = "Introduce the first lesson here.",
-                    Content = "Write the lesson content here.",
+                    Content = "<p>Write the lesson content here.</p>",
                     Prompts = ["Add a reflection prompt"],
                     Takeaway = "Summarize the key lesson."
                 }
@@ -323,7 +357,7 @@ else
         {
             Title = $"Chapter {(SelectedBook?.Chapters.Count ?? 0) + 1}: New Lesson",
             Summary = "Add a short summary.",
-            Content = "Write the lesson content here.",
+            Content = "<p>Write the full lesson content here.</p>",
             Prompts = ["Add a reflection prompt"],
             Takeaway = "Add a takeaway."
         });
@@ -344,20 +378,35 @@ else
         var file = eventArgs.File;
         await using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
         SelectedBook.CoverImagePath = await Repository.SaveCoverImageAsync(file.Name, stream);
-        SetStatus("Cover image uploaded. Save to update the shared JSON and auto-push the change.", "alert alert-success");
+        SetStatus("Cover image uploaded. Save to update the shared JSON and push the change.", "alert alert-success");
     }
 
     private async Task SaveAsync()
     {
         IsSaving = true;
         await Repository.SaveAllAsync(BookItems);
-        var gitResult = await GitAutomation.CommitAndPushAsync();
+
+        if (CanPushChanges)
+        {
+            var gitResult = await GitAutomation.CommitAndPushAsync();
+            SetStatus(gitResult.Message, gitResult.Success ? "alert alert-success" : "alert alert-warning");
+        }
+        else
+        {
+            SetStatus("Saved locally to public/data/ebooks.json. A SuperAdmin can now push the changes to GitHub.", "alert alert-success");
+        }
+
         IsSaving = false;
-        SetStatus(gitResult.Message, gitResult.Success ? "alert alert-success" : "alert alert-warning");
     }
 
     private async Task SyncToGitHubAsync()
     {
+        if (!CanPushChanges)
+        {
+            SetStatus("Only SuperAdmin users can push content changes to GitHub.", "alert alert-warning");
+            return;
+        }
+
         IsSyncing = true;
         await Repository.SaveAllAsync(BookItems);
         var result = await GitHubSync.SyncEbooksAsync();
