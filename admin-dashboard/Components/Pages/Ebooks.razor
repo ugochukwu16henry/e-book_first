@@ -2,6 +2,7 @@
 @attribute [Authorize]
 @rendermode InteractiveServer
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IConfiguration Configuration
 @inject JsonEbookRepository Repository
 @inject GitHubSyncService GitHubSync
 @inject GitAutomationService GitAutomation
@@ -362,7 +363,7 @@ else
                                                                                                         {
                                                                                                             <div class="row g-3 mb-3">
                                                                                                                 @foreach (var illustration in chapter.Illustrations.Where(item =>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        !string.IsNullOrWhiteSpace(item.ImagePath)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        !string.IsNullOrWhiteSpace(item.ImagePath)))
                                                                                                                 {
                                                                                                                     <div class="col-md-6">
                                                                                                                         <div class="border rounded-3 overflow-hidden bg-light">
@@ -456,24 +457,36 @@ else
 
     private void SelectBook(EbookRecord book) => SelectedBook = book;
 
+    private string GetStorefrontBaseUrl()
+    {
+        var configuredBaseUrl = Configuration["Storefront:BaseUrl"] ?? Configuration["StorefrontBaseUrl"];
+        return string.IsNullOrWhiteSpace(configuredBaseUrl)
+            ? "http://localhost:3000"
+            : configuredBaseUrl.TrimEnd('/');
+    }
+
     private string GetStorefrontBookUrl()
     {
+        var baseUrl = GetStorefrontBaseUrl();
+
         if (SelectedBook is null || string.IsNullOrWhiteSpace(SelectedBook.Slug))
         {
-            return "http://localhost:3000/";
+            return $"{baseUrl}/";
         }
 
-        return $"http://localhost:3000/books/{Uri.EscapeDataString(SelectedBook.Slug)}";
+        return $"{baseUrl}/books/{Uri.EscapeDataString(SelectedBook.Slug)}";
     }
 
     private string GetAdminDownloadUrl()
     {
+        var baseUrl = GetStorefrontBaseUrl();
+
         if (SelectedBook is null || string.IsNullOrWhiteSpace(SelectedBook.Slug))
         {
-            return "http://localhost:3000/";
+            return $"{baseUrl}/";
         }
 
-        return $"http://localhost:3000/books/{Uri.EscapeDataString(SelectedBook.Slug)}?adminDownload=1";
+        return $"{baseUrl}/books/{Uri.EscapeDataString(SelectedBook.Slug)}?adminDownload=1";
     }
 
     private void SelectTemplate(string key)

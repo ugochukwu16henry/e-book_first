@@ -1,0 +1,9 @@
+admin-dashboard/
+external/
+content/
+node_modules/
+build/
+.git/
+*.user
+*.suo
+.vs/
