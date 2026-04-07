@@ -343,29 +343,37 @@ function EbookPage({ books, templatesByKey }) {
             />
 
             <div className="mt-6 space-y-4">
-              {book.chapters.map((chapter, index) => (
-                <div key={chapter.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-                  <div className="mb-2 flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-[#2E3A8C]">
-                      {index + 1}
+              {book.chapters.map((chapter, index) => {
+                const chapterIllustrations = Array.isArray(chapter.illustrations) ? chapter.illustrations : [];
+
+                return (
+                  <div key={chapter.title} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                    <div className="mb-2 flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-50 text-sm font-semibold text-[#2E3A8C]">
+                        {index + 1}
+                      </div>
+                      <h3 className="font-semibold text-slate-900">{chapter.title}</h3>
                     </div>
-                    <h3 className="font-semibold text-slate-900">{chapter.title}</h3>
+                    <p className="text-sm leading-6 text-slate-600">{chapter.summary}</p>
+                    {chapterIllustrations.length ? (
+                      <div className={`mt-3 grid gap-3 ${chapterIllustrations.length > 1 ? 'sm:grid-cols-2' : ''}`}>
+                        {chapterIllustrations.map((illustration, illustrationIndex) => (
+                          <figure key={`${chapter.title}-${illustrationIndex}`} className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+                            <img
+                              src={illustration.resolvedImage || illustration.imagePath}
+                              alt={illustration.caption || chapter.title}
+                              className="h-56 w-full object-cover"
+                            />
+                            {illustration.caption ? (
+                              <figcaption className="px-4 py-2 text-xs text-slate-500">{illustration.caption}</figcaption>
+                            ) : null}
+                          </figure>
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
-                  <p className="text-sm leading-6 text-slate-600">{chapter.summary}</p>
-                  {chapter.illustrationImage || chapter.illustrationImagePath ? (
-                    <div className="mt-3 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-                      <img
-                        src={chapter.illustrationImage || chapter.illustrationImagePath}
-                        alt={chapter.illustrationCaption || chapter.title}
-                        className="h-56 w-full object-cover"
-                      />
-                      {chapter.illustrationCaption ? (
-                        <div className="px-4 py-2 text-xs text-slate-500">{chapter.illustrationCaption}</div>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
 

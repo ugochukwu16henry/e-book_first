@@ -1,12 +1,34 @@
 const resolveAsset = (path) =>
   typeof window !== 'undefined' ? `${window.location.origin}${path}` : path;
 
-const hydrateChapter = (chapter = {}) => ({
-  ...chapter,
-  illustrationImage: chapter.illustrationImagePath
-    ? resolveAsset(chapter.illustrationImagePath)
-    : '',
+const hydrateIllustration = (illustration = {}) => ({
+  ...illustration,
+  imagePath: illustration.imagePath || '',
+  caption: illustration.caption || '',
+  resolvedImage: illustration.imagePath ? resolveAsset(illustration.imagePath) : '',
 });
+
+const hydrateChapter = (chapter = {}) => {
+  const gallery = Array.isArray(chapter.illustrations)
+    ? chapter.illustrations.map(hydrateIllustration).filter((item) => item.imagePath)
+    : [];
+
+  if (!gallery.length && chapter.illustrationImagePath) {
+    gallery.push({
+      imagePath: chapter.illustrationImagePath,
+      caption: chapter.illustrationCaption || '',
+      resolvedImage: resolveAsset(chapter.illustrationImagePath),
+    });
+  }
+
+  return {
+    ...chapter,
+    illustrationImage: chapter.illustrationImagePath
+      ? resolveAsset(chapter.illustrationImagePath)
+      : '',
+    illustrations: gallery,
+  };
+};
 
 const hydrateBook = (book) => ({
   ...book,

@@ -27,6 +27,7 @@ public class ChapterRecord
     public string Content { get; set; } = string.Empty;
     public string IllustrationImagePath { get; set; } = string.Empty;
     public string IllustrationCaption { get; set; } = string.Empty;
+    public List<ChapterIllustrationRecord> Illustrations { get; set; } = [];
     public List<string> Prompts { get; set; } = [];
     public string Takeaway { get; set; } = string.Empty;
 
@@ -38,4 +39,10 @@ public class ChapterRecord
             .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .ToList() ?? [];
     }
+}
+
+public class ChapterIllustrationRecord
+{
+    public string ImagePath { get; set; } = string.Empty;
+    public string Caption { get; set; } = string.Empty;
 }

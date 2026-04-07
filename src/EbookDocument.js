@@ -386,7 +386,17 @@ export const MyEbook = ({ data }) => {
       </Page>
 
 {chapters.map((chapter, index) => {
-        const illustrationSource = chapter.illustrationImage || chapter.illustrationImagePath;
+        const chapterIllustrations = Array.isArray(chapter.illustrations) && chapter.illustrations.length
+          ? chapter.illustrations
+          : chapter.illustrationImage || chapter.illustrationImagePath
+            ? [
+                {
+                  resolvedImage: chapter.illustrationImage || chapter.illustrationImagePath,
+                  imagePath: chapter.illustrationImagePath || chapter.illustrationImage,
+                  caption: chapter.illustrationCaption || '',
+                },
+              ]
+            : [];
 
         return (
           <Page key={chapter.title || index} size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
@@ -395,14 +405,17 @@ export const MyEbook = ({ data }) => {
             <Text style={[styles.summary, { color: theme.subtext }]}>{chapter.summary || ''}</Text>
             <View style={[styles.divider, { borderBottomColor: theme.line }]} />
 
-            {illustrationSource ? (
-              <View style={[styles.chapterIllustrationWrap, { backgroundColor: theme.cardBg, borderColor: theme.line }]}>
-                <Image src={illustrationSource} style={styles.chapterIllustration} />
-                {chapter.illustrationCaption ? (
-                  <Text style={[styles.chapterCaption, { color: theme.subtext }]}>{chapter.illustrationCaption}</Text>
+            {chapterIllustrations.map((illustration, illustrationIndex) => (
+              <View
+                key={`${chapter.title || index}-illustration-${illustrationIndex}`}
+                style={[styles.chapterIllustrationWrap, { backgroundColor: theme.cardBg, borderColor: theme.line }]}
+              >
+                <Image src={illustration.resolvedImage || illustration.imagePath} style={styles.chapterIllustration} />
+                {illustration.caption ? (
+                  <Text style={[styles.chapterCaption, { color: theme.subtext }]}>{illustration.caption}</Text>
                 ) : null}
               </View>
-            ) : null}
+            ))}
 
             <View>
               {toParagraphs(chapter.content || 'Content goes here...').map((paragraph, paragraphIndex) => (
