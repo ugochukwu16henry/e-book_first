@@ -3,24 +3,15 @@
 
 <div class="rich-editor">
     <div class="rich-editor-toolbar btn-toolbar gap-2 mb-2" role="toolbar" aria-label="Rich text editor toolbar">
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                bold")"><strong>B</strong></button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                italic")"><em>I</em></button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                underline")"><u>U</u></button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                insertUnorderedList")">• List</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                insertOrderedList")">1. List</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                formatBlock", "<h2>" )">H2</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                formatBlock", "<blockquote>" )">Quote</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                createLink")">Link</button>
-        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="() => RunCommandAsync("
-                removeFormat")">Clear</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("bold")'><strong>B</strong></button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("italic")'><em>I</em></button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("underline")'><u>U</u></button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("insertUnorderedList")'>• List</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("insertOrderedList")'>1. List</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("formatBlock", "<h2>")'>H2</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("formatBlock", "<blockquote>")'>Quote</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("createLink")'>Link</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary" @onclick='() => RunCommandAsync("removeFormat")'>Clear</button>
     </div>
 
     <div id="@_editorId" class="rich-editor-surface form-control" data-placeholder="@Placeholder"

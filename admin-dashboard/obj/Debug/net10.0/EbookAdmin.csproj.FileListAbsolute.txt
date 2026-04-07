@@ -84,3 +84,5 @@ C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\refint\Eb
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\EbookAdmin.pdb
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\EbookAdmin.genruntimeconfig.cache
 C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\ref\EbookAdmin.dll
+C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\compressed\mxt9kldg3d-{0}-na0xa3spbd-na0xa3spbd.gz
+C:\Users\Dell\Documents\e-book_first\admin-dashboard\obj\Debug\net10.0\compressed\3003a0kwks-{0}-js42az972y-js42az972y.gz
