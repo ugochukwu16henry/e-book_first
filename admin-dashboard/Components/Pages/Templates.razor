@@ -1,0 +1,38 @@
+@page "/templates"
+@inject JsonEbookRepository Repository
+
+<PageTitle>PDF Templates</PageTitle>
+
+<h1 class="mb-3">PDF template options</h1>
+<p class="text-muted">These are the template styles available for each eBook in the admin dashboard.</p>
+
+@if (_templates.Count == 0)
+{
+    <div class="alert alert-info">No template definitions were found in `public/data/pdf-templates.json`.</div>
+}
+else
+{
+    <div class="row g-4">
+        @foreach (var template in _templates)
+        {
+            <div class="col-md-6 col-xl-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <span class="badge text-bg-light mb-3">@template.Key</span>
+                        <h2 class="h5">@template.Name</h2>
+                        <p class="text-muted mb-0">@template.Description</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private List<PdfTemplateOption> _templates = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _templates = await Repository.GetTemplatesAsync();
+    }
+}
