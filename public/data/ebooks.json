@@ -1,11 +1,33 @@
 [
   {
+    "slug": "new-ebook-770c52",
+    "title": "New eBook Title",
+    "badge": "Draft",
+    "price": "$0",
+    "format": "Instant PDF download",
+    "coverImagePath": "/images/e-book-cover.svg",
+    "pdfFileName": "new-ebook-770c52.pdf",
+    "selarUrl": "https://selar.co/your-product-link",
+    "templateKey": "relaxed-book",
+    "description": "Add a short sales description for this eBook.",
+    "intro": "\u003Cp\u003EAdd the intro content that should appear on the product page and in the PDF.\u003C/p\u003E",
+    "closingNote": "\u003Cp\u003EAdd a strong closing note for readers.\u003C/p\u003E",
+    "chapters": [
+      {
+        "title": "Chapter 1: New Lesson",
+        "summary": "Introduce the first lesson here.",
+        "content": "\u003Cp\u003EWrite the lesson content here.\u003C/p\u003E",
+        "prompts": [
+          "Add a reflection prompt"
+        ],
+        "takeaway": "Summarize the key lesson."
+      }
+    ]
+  },
+  {
     "slug": "premarital-readiness-blueprint",
     "title": "The Premarital Readiness Blueprint",
     "badge": "Featured",
-    "author": "Henry Ugochukwu",
-    "focusTitle": "PREMARITAL READINESS",
-    "focus": "Premarital preparation, communication, spiritual alignment, and commitment.",
     "price": "$19",
     "format": "Instant PDF download",
     "coverImagePath": "/images/E-book%20cover.jfif",
@@ -77,9 +99,6 @@
     "slug": "communication-before-i-do",
     "title": "Communication Before \u0022I Do\u0022",
     "badge": "Popular",
-    "author": "Henry Ugochukwu",
-    "focusTitle": "COMMUNICATION & EMOTIONAL SAFETY",
-    "focus": "Honest conversations, active listening, emotional safety, and repair before marriage.",
     "price": "$15",
     "format": "Instant PDF download",
     "coverImagePath": "/images/communication-before-i-do.svg",
@@ -126,9 +145,6 @@
     "slug": "money-purpose-and-marriage",
     "title": "Money, Purpose \u0026 Marriage",
     "badge": "New",
-    "author": "Henry Ugochukwu",
-    "focusTitle": "FINANCE, PURPOSE & STEWARDSHIP",
-    "focus": "Finances, stewardship, shared goals, and long-term vision for couples.",
     "price": "$17",
     "format": "Instant PDF download",
     "coverImagePath": "/images/money-purpose-and-marriage.svg",

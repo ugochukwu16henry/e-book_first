@@ -18,5 +18,25 @@
     "key": "relaxed",
     "name": "ReLaXed Print Layout",
     "description": "A ReLaXed-inspired document style with HTML-print aesthetics, stronger contrast, and report-friendly structure."
+  },
+  {
+    "key": "relaxed-book",
+    "name": "ReLaXed Book Edition",
+    "description": "Warm, immersive book styling inspired by ReLaXed long-form reading examples."
+  },
+  {
+    "key": "relaxed-report",
+    "name": "ReLaXed Report Edition",
+    "description": "Structured report-style layout with stronger section rhythm and executive-summary feel."
+  },
+  {
+    "key": "relaxed-paper",
+    "name": "ReLaXed Paper Edition",
+    "description": "Academic paper-inspired design with restrained tones, clean reading flow, and polished typography."
+  },
+  {
+    "key": "relaxed-letter",
+    "name": "ReLaXed Letter Edition",
+    "description": "Personal editorial/letter layout for reflective guides, devotionals, and intimate storytelling."
   }
 ]
