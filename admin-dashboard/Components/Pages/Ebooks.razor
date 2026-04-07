@@ -60,7 +60,7 @@ else
                                             @onclick="() => SelectBook(book)">
                                         <div class="fw-semibold">@book.Title</div>
                                         <div class="small @(isActive ? "text-white-50" : "text-muted")">@book.TemplateKey •
-                                            @book.Price</div>
+                                            @book.Price • PDF: @(book.ShowPdfDownload ? "On" : "Off")</div>
                                         </button>
                                     }
                                 </div>
@@ -160,14 +160,15 @@ else
                                                 <InputText class="form-control" @bind-Value="SelectedBook.PdfFileName" />
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label d-block">Storefront PDF button</label>
+                                                <label class="form-label d-block">Public PDF button visibility</label>
                                                 <div class="form-check mt-2">
                                                     <InputCheckbox class="form-check-input" @bind-Value="SelectedBook.ShowPdfDownload" />
-                                                    <label class="form-check-label">Show “Download PDF” on the homepage and eBook
-                                                        page</label>
+                                                    <label class="form-check-label">Show “Download PDF” on the homepage storefront and the
+                                                        public eBook page</label>
                                                     </div>
-                                                    <div class="form-text">Turn this off to hide the public download button while keeping admin
-                                                        download access available.</div>
+                                                    <div class="form-text">If you turn this off, the public Download PDF button is hidden on
+                                                        both the storefront card and the eBook page. Admin download access stays available
+                                                        below.</div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="form-label">Selar URL</label>
