@@ -52,6 +52,17 @@ const themes = {
     text: '#334155',
     subtext: '#64748B',
   },
+  relaxed: {
+    label: 'RELAXED PRINT LAYOUT',
+    accent: '#1F3C88',
+    coverBg: '#F4F1EA',
+    pageBg: '#FFFDF8',
+    line: '#D6C7B3',
+    cardBg: '#FFFFFF',
+    highlightBg: '#F6EFE4',
+    text: '#2B2B2B',
+    subtext: '#5F5A54',
+  },
 };
 
 const getAuthor = (data = {}) => toPlainText(data.author || 'Henry Ugochukwu');

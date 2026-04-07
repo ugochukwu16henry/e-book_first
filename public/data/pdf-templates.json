@@ -13,5 +13,10 @@
     "key": "minimal",
     "name": "Minimal Clean",
     "description": "Modern minimal styling with soft contrast and clean whitespace."
+  },
+  {
+    "key": "relaxed",
+    "name": "ReLaXed Print Layout",
+    "description": "A ReLaXed-inspired document style with HTML-print aesthetics, stronger contrast, and report-friendly structure."
   }
 ]
