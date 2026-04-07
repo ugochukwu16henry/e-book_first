@@ -33,6 +33,15 @@
                 </NavLink>
             </div>
         </AuthorizeView>
+
+        <AuthorizeView>
+            <div class="nav-item px-3 mt-3">
+                <div class="small text-white-50 px-3 mb-2">Signed in as @context.User.Identity?.Name</div>
+                <form method="post" action="/auth/logout">
+                    <button type="submit" class="btn btn-outline-light btn-sm w-100">Sign out</button>
+                </form>
+            </div>
+        </AuthorizeView>
     </nav>
 </div>
 

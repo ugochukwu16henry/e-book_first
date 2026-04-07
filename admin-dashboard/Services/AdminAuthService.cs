@@ -1,33 +1,72 @@
 using EbookAdmin.Models;
-using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
 
 namespace EbookAdmin.Services;
 
 public class AdminAuthService
 {
-    private readonly IOptions<AdminCredentialsOptions> _options;
+    private readonly AdminUserStoreService _userStore;
 
-    public AdminAuthService(IOptions<AdminCredentialsOptions> options)
+    public AdminAuthService(AdminUserStoreService userStore)
     {
-        _options = options;
+        _userStore = userStore;
     }
 
-    public IReadOnlyList<AdminUserDefinition> GetUsers()
+    public async Task<IReadOnlyList<AdminUserRecord>> GetUsersAsync()
     {
-        return _options.Value.Users ?? [];
+        var store = await _userStore.GetStoreAsync();
+        return store.Users
+            .OrderBy(user => user.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .ThenBy(user => user.Email, StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
-    public AdminUserDefinition? Validate(string email, string password)
+    public async Task<AdminUserRecord?> ValidateAsync(string email, string password)
     {
-        return GetUsers().FirstOrDefault(user =>
-            !user.Disabled &&
-            string.Equals(user.Email, email, StringComparison.OrdinalIgnoreCase) &&
-            user.Password == password);
+        var store = await _userStore.GetStoreAsync();
+        var user = store.Users.FirstOrDefault(candidate =>
+            !candidate.Disabled &&
+            string.Equals(candidate.Email, email, StringComparison.OrdinalIgnoreCase));
+
+        if (user is null)
+        {
+            return null;
+        }
+
+        var result = _userStore.VerifyPassword(user, password);
+        if (result == PasswordVerificationResult.Failed)
+        {
+            return null;
+        }
+
+        if (result == PasswordVerificationResult.SuccessRehashNeeded)
+        {
+            user.PasswordHash = _userStore.HashPassword(user, password);
+            user.UpdatedUtc = DateTimeOffset.UtcNow;
+            await _userStore.SaveStoreAsync(store);
+        }
+
+        return user;
     }
 
-    public TimeSpan GetIdleTimeout()
+    public async Task<TimeSpan> GetIdleTimeoutAsync()
     {
-        var minutes = Math.Clamp(_options.Value.IdleTimeoutMinutes, 5, 1440);
-        return TimeSpan.FromMinutes(minutes);
+        var store = await _userStore.GetStoreAsync();
+        return TimeSpan.FromMinutes(Math.Clamp(store.IdleTimeoutMinutes, 5, 1440));
     }
+
+    public Task SaveUserAsync(AdminUserRecord user, string? newPassword = null)
+        => _userStore.SaveUserAsync(user, newPassword);
+
+    public Task DeleteUserAsync(string userId)
+        => _userStore.DeleteUserAsync(userId);
+
+    public async Task UpdateIdleTimeoutAsync(int minutes)
+    {
+        var store = await _userStore.GetStoreAsync();
+        store.IdleTimeoutMinutes = Math.Clamp(minutes, 5, 1440);
+        await _userStore.SaveStoreAsync(store);
+    }
+
+    public string GetStoragePath() => _userStore.FilePath;
 }

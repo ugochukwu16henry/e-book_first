@@ -1,49 +1,287 @@
 @page "/users"
 @attribute [Authorize(Roles = "SuperAdmin")]
+@rendermode InteractiveServer
 @inject AdminAuthService AdminAuth
 
 <PageTitle>Admin Users</PageTitle>
 
-<h1 class="mb-2">Admin users & roles</h1>
-<p class="text-muted mb-4">Your Blazor dashboard now supports multiple admin users and role-based access. Add or edit
-    users in <code>admin-dashboard/appsettings.json</code>.</p>
+@if (_isLoading)
+{
+    <div class="py-5 text-center text-muted">Loading admin users...</div>
+}
+else
+{
+    <div class="d-flex flex-column gap-4">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+            <div>
+                <h1 class="mb-1">Admin users & roles</h1>
+                <p class="text-muted mb-0">Create, edit, disable, or remove dashboard users from the UI. Changes are saved to <code>content/admin-users.json</code>.</p>
+            </div>
+            <button type="button" class="btn btn-primary" @onclick="StartNewUser">New admin user</button>
+        </div>
 
-    <div class="row g-4 mb-4">
-        @foreach (var user in _users)
+        @if (!string.IsNullOrWhiteSpace(_statusMessage))
         {
-            <div class="col-md-6">
+            <div class="@_statusCss mb-0">@_statusMessage</div>
+        }
+
+        <div class="row g-4">
+            <div class="col-lg-7">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
-                            <div>
-                                <h2 class="h5 mb-1">@user.DisplayName</h2>
-                                <div class="text-muted small">@user.Email</div>
-                            </div>
-                            <span class="badge text-bg-light">@string.Join(", ", user.Roles)</span>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h2 class="h5 mb-0">Saved admins</h2>
+                            <span class="badge text-bg-light">@_users.Count users</span>
                         </div>
 
-                        <p class="mb-0 text-muted">Status: @(user.Disabled ? "Disabled" : "Active")</p>
+                        <div class="d-flex flex-column gap-3">
+                            @foreach (var user in _users)
+                            {
+                                var isSelected = string.Equals(_editor.Id, user.Id, StringComparison.OrdinalIgnoreCase);
+                                <div class="border rounded-3 p-3 @(isSelected ? "border-primary bg-primary-subtle" : "bg-body-tertiary")">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div>
+                                            <div class="fw-semibold">@user.DisplayName</div>
+                                            <div class="text-muted small">@user.Email</div>
+                                        </div>
+                                        <div class="d-flex flex-wrap justify-content-end gap-2">
+                                            @foreach (var role in user.Roles)
+                                            {
+                                                <span class="badge text-bg-light">@role</span>
+                                            }
+                                            <span class="badge @(user.Disabled ? "text-bg-warning" : "text-bg-success")">@(user.Disabled ? "Disabled" : "Active")</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="small text-muted mt-2">Last updated: @user.UpdatedUtc.ToLocalTime().ToString("g")</div>
+
+                                    <div class="d-flex gap-2 mt-3">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" @onclick="() => EditUser(user)">Edit</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" @onclick="() => DeleteUserAsync(user)">Delete</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        }
-    </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-body">
-            <h3 class="h5">Session timeout</h3>
-            <p class="text-muted mb-0">Admin sessions automatically time out after <strong>@_timeoutMinutes minutes of
-                inactivity</strong>.</p>
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <h2 class="h5 mb-3">@(_editor.IsNew ? "Add admin user" : "Edit admin user")</h2>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label">Display name</label>
+                                <InputText class="form-control" @bind-Value="_editor.DisplayName" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Email</label>
+                                <InputText class="form-control" @bind-Value="_editor.Email" />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Password</label>
+                                <input class="form-control" type="password" @bind="_password" autocomplete="new-password" />
+                                <div class="form-text">@(_editor.IsNew ? "Required for new users." : "Leave blank to keep the current password.")</div>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label d-block mb-2">Roles</label>
+                                <div class="form-check">
+                                    <InputCheckbox class="form-check-input" @bind-Value="_editor.IsEditor" />
+                                    <label class="form-check-label">Editor</label>
+                                </div>
+                                <div class="form-check mt-1">
+                                    <InputCheckbox class="form-check-input" @bind-Value="_editor.IsSuperAdmin" />
+                                    <label class="form-check-label">SuperAdmin</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <InputCheckbox class="form-check-input" @bind-Value="_editor.Disabled" />
+                                    <label class="form-check-label">Disable this account</label>
+                                </div>
+                            </div>
+                            <div class="col-12 d-flex gap-2">
+                                <button type="button" class="btn btn-primary" @onclick="SaveUserAsync" disabled="@_isSaving">
+                                    @(_isSaving ? "Saving..." : "Save user")
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" @onclick="StartNewUser">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body">
+                        <h3 class="h5 mb-2">Session timeout</h3>
+                        <div class="row g-2 align-items-end">
+                            <div class="col-7">
+                                <label class="form-label">Idle timeout (minutes)</label>
+                                <InputNumber class="form-control" @bind-Value="_timeoutMinutes" />
+                            </div>
+                            <div class="col-5">
+                                <button type="button" class="btn btn-outline-primary w-100" @onclick="SaveTimeoutAsync">Save timeout</button>
+                            </div>
+                        </div>
+                        <p class="text-muted small mb-0 mt-2">New sign-ins will use this timeout. Current data file: <code>@_storePath</code>.</p>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
+}
 
 @code {
-    private IReadOnlyList<AdminUserDefinition> _users = [];
-    private int _timeoutMinutes;
+    private List<AdminUserRecord> _users = [];
+    private AdminUserEditorModel _editor = AdminUserEditorModel.CreateNew();
+    private bool _isLoading = true;
+    private bool _isSaving;
+    private int _timeoutMinutes = 30;
+    private string _password = string.Empty;
+    private string _storePath = "content/admin-users.json";
+    private string? _statusMessage;
+    private string _statusCss = "alert alert-info";
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        _users = AdminAuth.GetUsers();
-        _timeoutMinutes = (int)AdminAuth.GetIdleTimeout().TotalMinutes;
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _isLoading = true;
+        _users = [.. await AdminAuth.GetUsersAsync()];
+        _timeoutMinutes = (int)(await AdminAuth.GetIdleTimeoutAsync()).TotalMinutes;
+        _storePath = AdminAuth.GetStoragePath();
+        _isLoading = false;
+    }
+
+    private void StartNewUser()
+    {
+        _editor = AdminUserEditorModel.CreateNew();
+        _password = string.Empty;
+    }
+
+    private void EditUser(AdminUserRecord user)
+    {
+        _editor = new AdminUserEditorModel
+        {
+            Id = user.Id,
+            DisplayName = user.DisplayName,
+            Email = user.Email,
+            IsEditor = user.Roles.Contains("Editor", StringComparer.OrdinalIgnoreCase),
+            IsSuperAdmin = user.Roles.Contains("SuperAdmin", StringComparer.OrdinalIgnoreCase),
+            Disabled = user.Disabled
+        };
+
+        _password = string.Empty;
+    }
+
+    private async Task SaveUserAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_editor.DisplayName) || string.IsNullOrWhiteSpace(_editor.Email))
+        {
+            SetStatus("Display name and email are required.", "alert alert-warning");
+            return;
+        }
+
+        if (_editor.IsNew && string.IsNullOrWhiteSpace(_password))
+        {
+            SetStatus("Enter a password for the new admin user.", "alert alert-warning");
+            return;
+        }
+
+        _isSaving = true;
+
+        try
+        {
+            var roles = new List<string>();
+
+            if (_editor.IsEditor)
+            {
+                roles.Add("Editor");
+            }
+
+            if (_editor.IsSuperAdmin)
+            {
+                roles.Add("SuperAdmin");
+            }
+
+            var user = new AdminUserRecord
+            {
+                Id = _editor.Id,
+                DisplayName = _editor.DisplayName.Trim(),
+                Email = _editor.Email.Trim(),
+                Disabled = _editor.Disabled,
+                Roles = roles
+            };
+
+            await AdminAuth.SaveUserAsync(user, string.IsNullOrWhiteSpace(_password) ? null : _password);
+            await LoadAsync();
+            StartNewUser();
+            SetStatus("Admin user saved to the persistent store.", "alert alert-success");
+        }
+        catch (Exception ex)
+        {
+            SetStatus(ex.Message, "alert alert-danger");
+        }
+        finally
+        {
+            _isSaving = false;
+        }
+    }
+
+    private async Task DeleteUserAsync(AdminUserRecord user)
+    {
+        try
+        {
+            await AdminAuth.DeleteUserAsync(user.Id);
+            await LoadAsync();
+
+            if (string.Equals(_editor.Id, user.Id, StringComparison.OrdinalIgnoreCase))
+            {
+                StartNewUser();
+            }
+
+            SetStatus($"Removed '{user.DisplayName}' from the admin user store.", "alert alert-success");
+        }
+        catch (Exception ex)
+        {
+            SetStatus(ex.Message, "alert alert-danger");
+        }
+    }
+
+    private async Task SaveTimeoutAsync()
+    {
+        try
+        {
+            await AdminAuth.UpdateIdleTimeoutAsync(_timeoutMinutes);
+            await LoadAsync();
+            SetStatus($"Idle timeout updated to {_timeoutMinutes} minutes. New sign-ins will use the new value.", "alert alert-success");
+        }
+        catch (Exception ex)
+        {
+            SetStatus(ex.Message, "alert alert-danger");
+        }
+    }
+
+    private void SetStatus(string message, string cssClass)
+    {
+        _statusMessage = message;
+        _statusCss = cssClass;
+    }
+
+    private sealed class AdminUserEditorModel
+    {
+        public string Id { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public bool IsEditor { get; set; } = true;
+        public bool IsSuperAdmin { get; set; }
+        public bool Disabled { get; set; }
+        public bool IsNew => string.IsNullOrWhiteSpace(Id);
+
+        public static AdminUserEditorModel CreateNew() => new();
     }
 }

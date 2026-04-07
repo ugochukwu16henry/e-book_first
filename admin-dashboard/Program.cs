@@ -26,6 +26,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<GitHubSyncOptions>(builder.Configuration.GetSection("GitHubSync"));
 builder.Services.Configure<AdminCredentialsOptions>(builder.Configuration.GetSection("AdminCredentials"));
+builder.Services.AddScoped<AdminUserStoreService>();
 builder.Services.AddScoped<AdminAuthService>();
 builder.Services.AddScoped<JsonEbookRepository>();
 builder.Services.AddScoped<GitHubSyncService>();
@@ -63,7 +64,7 @@ app.MapPost("/auth/login", async (HttpContext context, AdminAuthService authServ
     var password = form["password"].ToString();
     var returnUrl = form["returnUrl"].ToString();
 
-    var user = authService.Validate(email, password);
+    var user = await authService.ValidateAsync(email, password);
     if (user is null)
     {
         return Results.LocalRedirect("/login?error=1");
@@ -87,7 +88,7 @@ app.MapPost("/auth/login", async (HttpContext context, AdminAuthService authServ
     {
         IsPersistent = false,
         AllowRefresh = true,
-        ExpiresUtc = DateTimeOffset.UtcNow.Add(authService.GetIdleTimeout())
+        ExpiresUtc = DateTimeOffset.UtcNow.Add(await authService.GetIdleTimeoutAsync())
     };
 
     await context.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal, authProperties);
