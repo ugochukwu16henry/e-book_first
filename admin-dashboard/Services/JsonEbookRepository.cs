@@ -19,6 +19,7 @@ public class JsonEbookRepository
 
     public string EbooksFilePath => ResolveRepoPath("public", "data", "ebooks.json");
     public string TemplatesFilePath => ResolveRepoPath("public", "data", "pdf-templates.json");
+    public string ImagesDirectoryPath => ResolveRepoPath("public", "images");
 
     public async Task<List<EbookRecord>> GetAllAsync()
     {
@@ -40,6 +41,25 @@ public class JsonEbookRepository
 
         var json = JsonSerializer.Serialize(ebooks, _jsonOptions);
         await File.WriteAllTextAsync(EbooksFilePath, json);
+    }
+
+    public async Task<string> SaveCoverImageAsync(string fileName, Stream stream, CancellationToken cancellationToken = default)
+    {
+        Directory.CreateDirectory(ImagesDirectoryPath);
+
+        var extension = Path.GetExtension(fileName);
+        var safeName = Path.GetFileNameWithoutExtension(fileName)
+            .Replace(" ", "-")
+            .Replace("_", "-")
+            .ToLowerInvariant();
+
+        var finalName = $"{DateTime.UtcNow:yyyyMMddHHmmss}-{safeName}{extension}";
+        var finalPath = Path.Combine(ImagesDirectoryPath, finalName);
+
+        await using var fileStream = File.Create(finalPath);
+        await stream.CopyToAsync(fileStream, cancellationToken);
+
+        return $"/images/{Uri.EscapeDataString(finalName)}";
     }
 
     private async Task<List<T>> ReadListAsync<T>(string path)
