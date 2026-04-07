@@ -276,8 +276,14 @@ else
                                                                                                         <div class="border rounded-3 p-3 bg-white">
                                                                                                             <div class="d-flex justify-content-between align-items-center mb-3">
                                                                                                                 <strong>Illustration block</strong>
-                                                                                                                <button type="button" class="btn btn-outline-danger btn-sm"
-                                                                                                                        @onclick="() => RemoveIllustration(chapter, illustration)">Remove</button>
+                                                                                                                <div class="d-flex gap-2">
+                                                                                                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                                                                                                            @onclick="() => MoveIllustrationUp(chapter, illustration)">↑</button>
+                                                                                                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                                                                                                            @onclick="() => MoveIllustrationDown(chapter, illustration)">↓</button>
+                                                                                                                    <button type="button" class="btn btn-outline-danger btn-sm"
+                                                                                                                            @onclick="() => RemoveIllustration(chapter, illustration)">Remove</button>
+                                                                                                                </div>
                                                                                                             </div>
                                                                                                             <div class="row g-3">
                                                                                                                 <div class="col-md-6">
@@ -356,7 +362,7 @@ else
                                                                                                         {
                                                                                                             <div class="row g-3 mb-3">
                                                                                                                 @foreach (var illustration in chapter.Illustrations.Where(item =>
-                                                                                                                                                                                                                                                                                                                                                                        !string.IsNullOrWhiteSpace(item.ImagePath)))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        !string.IsNullOrWhiteSpace(item.ImagePath)))
                                                                                                                 {
                                                                                                                     <div class="col-md-6">
                                                                                                                         <div class="border rounded-3 overflow-hidden bg-light">
@@ -628,9 +634,54 @@ StringComparison.OrdinalIgnoreCase))?.Name
         });
     }
 
+    private void MoveIllustrationUp(ChapterRecord chapter, ChapterIllustrationRecord illustration)
+    {
+        MoveIllustration(chapter, illustration, -1);
+    }
+
+    private void MoveIllustrationDown(ChapterRecord chapter, ChapterIllustrationRecord illustration)
+    {
+        MoveIllustration(chapter, illustration, 1);
+    }
+
+    private void MoveIllustration(ChapterRecord chapter, ChapterIllustrationRecord illustration, int direction)
+    {
+        chapter.Illustrations ??= [];
+        var currentIndex = chapter.Illustrations.IndexOf(illustration);
+        if (currentIndex < 0)
+        {
+            return;
+        }
+
+        var targetIndex = currentIndex + direction;
+        if (targetIndex < 0 || targetIndex >= chapter.Illustrations.Count)
+        {
+            return;
+        }
+
+        (chapter.Illustrations[currentIndex], chapter.Illustrations[targetIndex]) =
+            (chapter.Illustrations[targetIndex], chapter.Illustrations[currentIndex]);
+
+        for (var index = 0; index < chapter.Illustrations.Count; index++)
+        {
+            chapter.Illustrations[index].PlacementAfterParagraph = index + 1;
+        }
+
+        SyncLegacyIllustrationFields(chapter);
+    }
+
     private void RemoveIllustration(ChapterRecord chapter, ChapterIllustrationRecord illustration)
     {
         chapter.Illustrations?.Remove(illustration);
+
+        if (chapter.Illustrations is not null)
+        {
+            for (var index = 0; index < chapter.Illustrations.Count; index++)
+            {
+                chapter.Illustrations[index].PlacementAfterParagraph = index + 1;
+            }
+        }
+
         SyncLegacyIllustrationFields(chapter);
     }
 
