@@ -33,7 +33,7 @@
     "format": "Instant PDF download",
     "coverImagePath": "/images/E-book%20cover.jfif",
     "pdfFileName": "the-premarital-readiness-blueprint.pdf",
-    "showPdfDownload": true,
+    "showPdfDownload": false,
     "selarUrl": "https://selar.com/7d35y4v77r",
     "templateKey": "premium",
     "description": "A practical, faith-aware guide for couples preparing for a strong and intentional future.",
