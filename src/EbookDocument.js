@@ -62,6 +62,70 @@ const themes = {
     highlightBg: '#F6EFE4',
     text: '#2B2B2B',
     subtext: '#5F5A54',
+    styleNote: 'HTML-print aesthetic with clean report structure',
+    contentsHeading: 'Document overview',
+    finalHeading: 'Turn insight into action',
+    footerNote: 'Rendered in a ReLaXed-inspired print layout',
+  },
+  'relaxed-book': {
+    label: 'RELAXED BOOK EDITION',
+    accent: '#5A3E2B',
+    coverBg: '#FBF6EE',
+    pageBg: '#FFFCF7',
+    line: '#E4D4C3',
+    cardBg: '#FFFDF9',
+    highlightBg: '#F7EFE3',
+    text: '#3F342B',
+    subtext: '#6B5B4D',
+    styleNote: 'Long-form reading layout with warm editorial tones',
+    contentsHeading: 'Book structure',
+    finalHeading: 'Carry these lessons into your story',
+    footerNote: 'Prepared in the ReLaXed Book Edition',
+  },
+  'relaxed-report': {
+    label: 'RELAXED REPORT EDITION',
+    accent: '#0B5D7A',
+    coverBg: '#F4FAFC',
+    pageBg: '#FCFEFF',
+    line: '#C9E2EA',
+    cardBg: '#FFFFFF',
+    highlightBg: '#EAF6FA',
+    text: '#20323B',
+    subtext: '#50656F',
+    styleNote: 'Professional report layout with strong section clarity',
+    contentsHeading: 'Report highlights',
+    finalHeading: 'Key recommendations for the future',
+    footerNote: 'Prepared in the ReLaXed Report Edition',
+  },
+  'relaxed-paper': {
+    label: 'RELAXED PAPER EDITION',
+    accent: '#374151',
+    coverBg: '#F8F8F6',
+    pageBg: '#FFFFFF',
+    line: '#D6D9DE',
+    cardBg: '#FAFAFA',
+    highlightBg: '#F3F4F6',
+    text: '#2B313A',
+    subtext: '#616B77',
+    styleNote: 'Academic paper rhythm with clean, disciplined typography',
+    contentsHeading: 'Paper outline',
+    finalHeading: 'Conclusion and next reflection',
+    footerNote: 'Prepared in the ReLaXed Paper Edition',
+  },
+  'relaxed-letter': {
+    label: 'RELAXED LETTER EDITION',
+    accent: '#8B3A3A',
+    coverBg: '#FFF8F6',
+    pageBg: '#FFFDFC',
+    line: '#E7D0CB',
+    cardBg: '#FFFFFF',
+    highlightBg: '#FCEFEA',
+    text: '#442F2F',
+    subtext: '#7A5F5F',
+    styleNote: 'Reflective editorial layout for personal, story-driven writing',
+    contentsHeading: 'Letter themes',
+    finalHeading: 'A final word for the journey ahead',
+    footerNote: 'Prepared in the ReLaXed Letter Edition',
   },
 };
 
@@ -69,6 +133,11 @@ const getAuthor = (data = {}) => toPlainText(data.author || 'Henry Ugochukwu');
 const getFocusTitle = (data = {}, theme) => toPlainText(data.focusTitle || data.badge || theme.label || 'Featured Guide');
 const getFocusText = (data = {}) =>
   toPlainText(data.focus || data.description || 'Premarital preparation, communication, and commitment');
+const getLayoutNote = (theme = {}) => theme.styleNote || 'Premium eBook layout';
+const getContentsHeading = (theme = {}) => theme.contentsHeading || 'Inside this eBook';
+const getFinalHeading = (theme = {}) => theme.finalHeading || 'A wise beginning shapes a strong future';
+const getFooterNote = (theme = {}, author = 'Henry Ugochukwu') =>
+  theme.footerNote ? `${theme.footerNote} | ${author}` : `Prepared by ${author}`;
 
 const styles = StyleSheet.create({
   page: {
@@ -219,6 +288,10 @@ export const MyEbook = ({ data }) => {
   const author = getAuthor(data);
   const focusTitle = getFocusTitle(data, theme);
   const focusText = getFocusText(data);
+  const layoutNote = getLayoutNote(theme);
+  const contentsHeading = getContentsHeading(theme);
+  const finalHeading = getFinalHeading(theme);
+  const footerNote = getFooterNote(theme, author);
 
   return (
     <Document
@@ -255,6 +328,7 @@ export const MyEbook = ({ data }) => {
               <Text style={[styles.infoLine, { color: theme.text }]}>Focus: {focusText}</Text>
               <Text style={[styles.infoLine, { color: theme.text }]}>Chapters: {chapters.length}</Text>
               <Text style={[styles.infoLine, { color: theme.text }]}>PDF Template: {theme.label}</Text>
+              <Text style={[styles.infoLine, { color: theme.text }]}>Layout Style: {layoutNote}</Text>
             </View>
           </View>
         </View>
@@ -262,7 +336,7 @@ export const MyEbook = ({ data }) => {
         <Text
           style={styles.footer}
           render={({ pageNumber, totalPages }) =>
-            `Page ${pageNumber} of ${totalPages} | Prepared by Henry Ugochukwu`
+            `Page ${pageNumber} of ${totalPages} | ${footerNote}`
           }
           fixed
         />
@@ -270,7 +344,7 @@ export const MyEbook = ({ data }) => {
 
       <Page size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
         <Text style={[styles.label, { color: theme.accent }]}>TABLE OF CONTENTS</Text>
-        <Text style={[styles.heading, { color: theme.accent }]}>Inside this eBook</Text>
+        <Text style={[styles.heading, { color: theme.accent }]}>{contentsHeading}</Text>
         <View style={[styles.divider, { borderBottomColor: theme.line }]} />
 
         {chapters.map((chapter, index) => (
@@ -286,7 +360,7 @@ export const MyEbook = ({ data }) => {
         <Text
           style={styles.footer}
           render={({ pageNumber, totalPages }) =>
-            `Page ${pageNumber} of ${totalPages} | Prepared by Henry Ugochukwu`
+            `Page ${pageNumber} of ${totalPages} | ${footerNote}`
           }
           fixed
         />
@@ -328,7 +402,7 @@ export const MyEbook = ({ data }) => {
           <Text
             style={styles.footer}
             render={({ pageNumber, totalPages }) =>
-              `Page ${pageNumber} of ${totalPages} | Prepared by Henry Ugochukwu`
+              `Page ${pageNumber} of ${totalPages} | ${footerNote}`
             }
             fixed
           />
@@ -337,7 +411,7 @@ export const MyEbook = ({ data }) => {
 
       <Page size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
         <Text style={[styles.label, { color: theme.accent }]}>FINAL NOTE</Text>
-        <Text style={[styles.heading, { color: theme.accent }]}>A wise beginning shapes a strong future</Text>
+        <Text style={[styles.heading, { color: theme.accent }]}>{finalHeading}</Text>
         <View style={[styles.divider, { borderBottomColor: theme.line }]} />
         <Text style={[styles.paragraph, { color: theme.text }]}>
           {toPlainText(
@@ -352,7 +426,7 @@ export const MyEbook = ({ data }) => {
         <Text
           style={styles.footer}
           render={({ pageNumber, totalPages }) =>
-            `Page ${pageNumber} of ${totalPages} | Prepared by Henry Ugochukwu`
+            `Page ${pageNumber} of ${totalPages} | ${footerNote}`
           }
           fixed
         />
