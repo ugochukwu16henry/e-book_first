@@ -291,104 +291,117 @@ else
                                                                                                                                OnChange="args => UploadChapterIllustrationAsync(chapter, illustration, args)"
                                                                                                                                accept="image/*" />
                                                                                                                 </div>
-                                                                                                                <div class="col-12">
+                                                                                                                <div class="col-md-8">
                                                                                                                     <label class="form-label">Caption</label>
                                                                                                                     <InputText class="form-control"
                                                                                                                                @bind-Value="illustration.Caption" />
                                                                                                                 </div>
-                                                                                                                @if (!string.IsNullOrWhiteSpace(illustration.ImagePath))
-                                                                                                                {
-                                                                                                                    <div class="col-12">
-                                                                                                                        <img src="@illustration.ImagePath" alt="@chapter.Title"
-                                                                                                                             class="img-fluid rounded-3 border"
-                                                                                                                             style="max-height: 240px; object-fit: cover;" />
-                                                                                                                        @if (!string.IsNullOrWhiteSpace(illustration.Caption))
-                                                                                                                        {
-                                                                                                                            <div class="small text-muted mt-2">@illustration.Caption</div>
+                                                                                                                <div class="col-md-4">
+                                                                                                                    <label class="form-label">Place after text block #</label>
+                                                                                                                    <InputNumber class="form-control"
+                                                                                                                                 @bind-Value="illustration.PlacementAfterParagraph" />
+                                                                                                                    <div class="form-text">0 = before the first paragraph, 1 = after the
+                                                                                                                        first paragraph or subtopic.</div>
+                                                                                                                    </div>
+                                                                                                                    @if (!string.IsNullOrWhiteSpace(illustration.ImagePath))
+                                                                                                                    {
+                                                                                                                        <div class="col-12">
+                                                                                                                            <img src="@illustration.ImagePath" alt="@chapter.Title"
+                                                                                                                                 class="img-fluid rounded-3 border"
+                                                                                                                                 style="max-height: 240px; object-fit: cover;" />
+                                                                                                                            <div class="small text-muted mt-2">Placed after text block
+                                                                                                                                @illustration.PlacementAfterParagraph</div>
+                                                                                                                                @if (!string.IsNullOrWhiteSpace(illustration.Caption))
+                                                                                                                                {
+                                                                                                                                    <div class="small text-muted mt-1">@illustration.Caption</div>
+                                                                                                                                }
+                                                                                                                            </div>
                                                                                                                         }
                                                                                                                     </div>
-                                                                                                                }
-                                                                                                            </div>
+                                                                                                                </div>
+                                                                                                            }
                                                                                                         </div>
                                                                                                     }
                                                                                                 </div>
-                                                                                            }
+                                                                                                <div class="col-md-6">
+                                                                                                    <label class="form-label">Reflection prompts (one per line)</label>
+                                                                                                    <InputTextArea class="form-control" rows="5" @bind-Value="chapter.PromptsText" />
+                                                                                                </div>
+                                                                                                <div class="col-md-6">
+                                                                                                    <label class="form-label">Key takeaway</label>
+                                                                                                    <InputTextArea class="form-control" rows="5" @bind-Value="chapter.Takeaway" />
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
-                                                                                        <div class="col-md-6">
-                                                                                            <label class="form-label">Reflection prompts (one per line)</label>
-                                                                                            <InputTextArea class="form-control" rows="5" @bind-Value="chapter.PromptsText" />
-                                                                                        </div>
-                                                                                        <div class="col-md-6">
-                                                                                            <label class="form-label">Key takeaway</label>
-                                                                                            <InputTextArea class="form-control" rows="5" @bind-Value="chapter.Takeaway" />
+                                                                                    }
+                                                                                </div>
+
+                                                                                <div class="card border-0 bg-body-tertiary mt-4">
+                                                                                    <div class="card-body">
+                                                                                        <h3 class="h5 mb-2">Preview this eBook</h3>
+                                                                                        <p class="text-muted">Review the content exactly as it will flow into your storefront and
+                                                                                            PDF generator.</p>
+
+                                                                                            <h4 class="h6 mb-1">@SelectedBook.Title</h4>
+                                                                                            <p class="text-muted">@SelectedBook.Description</p>
+                                                                                            <div class="mb-3">@((MarkupString)(SelectedBook.Intro ?? string.Empty))</div>
+
+                                                                                            <div class="d-flex flex-column gap-3">
+                                                                                                @foreach (var chapter in SelectedBook.Chapters)
+                                                                                                {
+                                                                                                    <div class="border rounded-3 p-3 bg-white">
+                                                                                                        <div class="fw-semibold">@chapter.Title</div>
+                                                                                                        <div class="text-muted small mb-2">@chapter.Summary</div>
+                                                                                                        @if (chapter.Illustrations.Count > 0)
+                                                                                                        {
+                                                                                                            <div class="row g-3 mb-3">
+                                                                                                                @foreach (var illustration in chapter.Illustrations.Where(item =>
+                                                                                                                                                                                                                                                                                                                                                                        !string.IsNullOrWhiteSpace(item.ImagePath)))
+                                                                                                                {
+                                                                                                                    <div class="col-md-6">
+                                                                                                                        <div class="border rounded-3 overflow-hidden bg-light">
+                                                                                                                            <img src="@illustration.ImagePath" alt="@chapter.Title"
+                                                                                                                                 class="img-fluid w-100"
+                                                                                                                                 style="max-height: 220px; object-fit: cover;" />
+                                                                                                                            <div class="small text-muted p-2">
+                                                                                                                                @if (!string.IsNullOrWhiteSpace(illustration.Caption))
+                                                                                                                                {
+                                                                                                                                    <span>@illustration.Caption</span>
+                                                                                                                                }
+                                                                                                                                <span class="ms-2">• After text block
+                                                                                                                                    @illustration.PlacementAfterParagraph</span>
+                                                                                                                                </div>
+                                                                                                                            </div>
+                                                                                                                        </div>
+                                                                                                                    }
+                                                                                                                </div>
+                                                                                                            }
+                                                                                                            <div>@((MarkupString)(chapter.Content ?? string.Empty))</div>
+                                                                                                            @if (chapter.Prompts.Count > 0)
+                                                                                                            {
+                                                                                                                <ul class="mt-2 mb-2">
+                                                                                                                    @foreach (var prompt in chapter.Prompts)
+                                                                                                                    {
+                                                                                                                        <li>@prompt</li>
+                                                                                                                    }
+                                                                                                                </ul>
+                                                                                                            }
+                                                                                                            @if (!string.IsNullOrWhiteSpace(chapter.Takeaway))
+                                                                                                            {
+                                                                                                                <div class="small text-primary fw-semibold">Takeaway: @chapter.Takeaway</div>
+                                                                                                            }
+                                                                                                        </div>
+                                                                                                    }
+                                                                                                </div>
+                                                                                            </div>
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
                                                                             }
                                                                         </div>
-
-                                                                        <div class="card border-0 bg-body-tertiary mt-4">
-                                                                            <div class="card-body">
-                                                                                <h3 class="h5 mb-2">Preview this eBook</h3>
-                                                                                <p class="text-muted">Review the content exactly as it will flow into your storefront and
-                                                                                    PDF generator.</p>
-
-                                                                                    <h4 class="h6 mb-1">@SelectedBook.Title</h4>
-                                                                                    <p class="text-muted">@SelectedBook.Description</p>
-                                                                                    <div class="mb-3">@((MarkupString)(SelectedBook.Intro ?? string.Empty))</div>
-
-                                                                                    <div class="d-flex flex-column gap-3">
-                                                                                        @foreach (var chapter in SelectedBook.Chapters)
-                                                                                        {
-                                                                                            <div class="border rounded-3 p-3 bg-white">
-                                                                                                <div class="fw-semibold">@chapter.Title</div>
-                                                                                                <div class="text-muted small mb-2">@chapter.Summary</div>
-                                                                                                @if (chapter.Illustrations.Count > 0)
-                                                                                                {
-                                                                                                    <div class="row g-3 mb-3">
-                                                                                                        @foreach (var illustration in chapter.Illustrations.Where(item =>
-                                                                                                                                                !string.IsNullOrWhiteSpace(item.ImagePath)))
-                                                                                                        {
-                                                                                                            <div class="col-md-6">
-                                                                                                                <div class="border rounded-3 overflow-hidden bg-light">
-                                                                                                                    <img src="@illustration.ImagePath" alt="@chapter.Title"
-                                                                                                                         class="img-fluid w-100"
-                                                                                                                         style="max-height: 220px; object-fit: cover;" />
-                                                                                                                    @if (!string.IsNullOrWhiteSpace(illustration.Caption))
-                                                                                                                    {
-                                                                                                                        <div class="small text-muted p-2">@illustration.Caption</div>
-                                                                                                                    }
-                                                                                                                </div>
-                                                                                                            </div>
-                                                                                                        }
-                                                                                                    </div>
-                                                                                                }
-                                                                                                <div>@((MarkupString)(chapter.Content ?? string.Empty))</div>
-                                                                                                @if (chapter.Prompts.Count > 0)
-                                                                                                {
-                                                                                                    <ul class="mt-2 mb-2">
-                                                                                                        @foreach (var prompt in chapter.Prompts)
-                                                                                                        {
-                                                                                                            <li>@prompt</li>
-                                                                                                        }
-                                                                                                    </ul>
-                                                                                                }
-                                                                                                @if (!string.IsNullOrWhiteSpace(chapter.Takeaway))
-                                                                                                {
-                                                                                                    <div class="small text-primary fw-semibold">Takeaway: @chapter.Takeaway</div>
-                                                                                                }
-                                                                                            </div>
-                                                                                        }
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
                                                                     </div>
-                                                                }
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                }
+                                                                </div>
+                                                            }
 
 @code {
     private List<EbookRecord> BookItems { get; set; } = [];
@@ -583,8 +596,14 @@ StringComparison.OrdinalIgnoreCase))?.Name
                     chapter.Illustrations.Add(new ChapterIllustrationRecord
                     {
                         ImagePath = chapter.IllustrationImagePath,
-                        Caption = chapter.IllustrationCaption
+                        Caption = chapter.IllustrationCaption,
+                        PlacementAfterParagraph = 1
                     });
+                }
+
+                foreach (var illustration in chapter.Illustrations)
+                {
+                    illustration.PlacementAfterParagraph = Math.Max(0, illustration.PlacementAfterParagraph);
                 }
 
                 SyncLegacyIllustrationFields(chapter);
@@ -603,7 +622,10 @@ StringComparison.OrdinalIgnoreCase))?.Name
     private void AddIllustration(ChapterRecord chapter)
     {
         chapter.Illustrations ??= [];
-        chapter.Illustrations.Add(new ChapterIllustrationRecord());
+        chapter.Illustrations.Add(new ChapterIllustrationRecord
+        {
+            PlacementAfterParagraph = Math.Max(1, chapter.Illustrations.Count + 1)
+        });
     }
 
     private void RemoveIllustration(ChapterRecord chapter, ChapterIllustrationRecord illustration)

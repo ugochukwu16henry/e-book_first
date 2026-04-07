@@ -45,4 +45,5 @@ public class ChapterIllustrationRecord
 {
     public string ImagePath { get; set; } = string.Empty;
     public string Caption { get; set; } = string.Empty;
+    public int PlacementAfterParagraph { get; set; } = 1;
 }

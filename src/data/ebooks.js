@@ -5,6 +5,9 @@ const hydrateIllustration = (illustration = {}) => ({
   ...illustration,
   imagePath: illustration.imagePath || '',
   caption: illustration.caption || '',
+  placementAfterParagraph: Number.isFinite(Number(illustration.placementAfterParagraph))
+    ? Math.max(0, Number(illustration.placementAfterParagraph))
+    : 1,
   resolvedImage: illustration.imagePath ? resolveAsset(illustration.imagePath) : '',
 });
 

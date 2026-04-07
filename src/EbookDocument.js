@@ -139,6 +139,55 @@ const getFinalHeading = (theme = {}) => theme.finalHeading || 'A wise beginning 
 const getFooterNote = (theme = {}, author = 'Henry Ugochukwu') =>
   theme.footerNote ? `${theme.footerNote} | ${author}` : `Prepared by ${author}`;
 
+const getChapterIllustrations = (chapter = {}) => {
+  const gallery = Array.isArray(chapter.illustrations) && chapter.illustrations.length
+    ? chapter.illustrations
+    : chapter.illustrationImage || chapter.illustrationImagePath
+      ? [
+          {
+            resolvedImage: chapter.illustrationImage || chapter.illustrationImagePath,
+            imagePath: chapter.illustrationImagePath || chapter.illustrationImage,
+            caption: chapter.illustrationCaption || '',
+            placementAfterParagraph: 1,
+          },
+        ]
+      : [];
+
+  return gallery
+    .filter((item) => item && (item.resolvedImage || item.imagePath))
+    .map((item) => ({
+      ...item,
+      placementAfterParagraph: Number.isFinite(Number(item.placementAfterParagraph))
+        ? Math.max(0, Number(item.placementAfterParagraph))
+        : 1,
+    }))
+    .sort((left, right) => left.placementAfterParagraph - right.placementAfterParagraph);
+};
+
+const buildChapterContentFlow = (chapter = {}) => {
+  const paragraphs = toParagraphs(chapter.content || 'Content goes here...');
+  const illustrations = getChapterIllustrations(chapter);
+  const blocks = [];
+
+  illustrations
+    .filter((item) => item.placementAfterParagraph === 0)
+    .forEach((item) => blocks.push({ type: 'image', illustration: item }));
+
+  paragraphs.forEach((paragraph, index) => {
+    blocks.push({ type: 'text', content: paragraph });
+
+    illustrations
+      .filter((item) => item.placementAfterParagraph === index + 1)
+      .forEach((item) => blocks.push({ type: 'image', illustration: item }));
+  });
+
+  illustrations
+    .filter((item) => item.placementAfterParagraph > paragraphs.length)
+    .forEach((item) => blocks.push({ type: 'image', illustration: item }));
+
+  return blocks;
+};
+
 const styles = StyleSheet.create({
   page: {
     paddingTop: 42,
@@ -386,17 +435,7 @@ export const MyEbook = ({ data }) => {
       </Page>
 
 {chapters.map((chapter, index) => {
-        const chapterIllustrations = Array.isArray(chapter.illustrations) && chapter.illustrations.length
-          ? chapter.illustrations
-          : chapter.illustrationImage || chapter.illustrationImagePath
-            ? [
-                {
-                  resolvedImage: chapter.illustrationImage || chapter.illustrationImagePath,
-                  imagePath: chapter.illustrationImagePath || chapter.illustrationImage,
-                  caption: chapter.illustrationCaption || '',
-                },
-              ]
-            : [];
+        const contentFlow = buildChapterContentFlow(chapter);
 
         return (
           <Page key={chapter.title || index} size="A4" style={[styles.page, { backgroundColor: theme.pageBg, color: theme.text }]}> 
@@ -405,24 +444,24 @@ export const MyEbook = ({ data }) => {
             <Text style={[styles.summary, { color: theme.subtext }]}>{chapter.summary || ''}</Text>
             <View style={[styles.divider, { borderBottomColor: theme.line }]} />
 
-            {chapterIllustrations.map((illustration, illustrationIndex) => (
-              <View
-                key={`${chapter.title || index}-illustration-${illustrationIndex}`}
-                style={[styles.chapterIllustrationWrap, { backgroundColor: theme.cardBg, borderColor: theme.line }]}
-              >
-                <Image src={illustration.resolvedImage || illustration.imagePath} style={styles.chapterIllustration} />
-                {illustration.caption ? (
-                  <Text style={[styles.chapterCaption, { color: theme.subtext }]}>{illustration.caption}</Text>
-                ) : null}
-              </View>
-            ))}
-
             <View>
-              {toParagraphs(chapter.content || 'Content goes here...').map((paragraph, paragraphIndex) => (
-                <Text key={paragraphIndex} style={[styles.paragraph, { color: theme.text }]}> 
-                  {paragraph}
-                </Text>
-              ))}
+              {contentFlow.map((block, blockIndex) =>
+                block.type === 'image' ? (
+                  <View
+                    key={`${chapter.title || index}-illustration-${blockIndex}`}
+                    style={[styles.chapterIllustrationWrap, { backgroundColor: theme.cardBg, borderColor: theme.line }]}
+                  >
+                    <Image src={block.illustration.resolvedImage || block.illustration.imagePath} style={styles.chapterIllustration} />
+                    {block.illustration.caption ? (
+                      <Text style={[styles.chapterCaption, { color: theme.subtext }]}>{block.illustration.caption}</Text>
+                    ) : null}
+                  </View>
+                ) : (
+                  <Text key={`${chapter.title || index}-paragraph-${blockIndex}`} style={[styles.paragraph, { color: theme.text }]}> 
+                    {block.content}
+                  </Text>
+                )
+              )}
             </View>
 
             {chapter.takeaway ? (
